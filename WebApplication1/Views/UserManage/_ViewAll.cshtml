@@ -1,0 +1,77 @@
+﻿@model IEnumerable<ApplicationUserViewModel>
+
+@{
+    Layout = null;
+}
+
+<table class="table table-bordered table-striped" id="applicationUserTable">
+    <thead>
+        <tr>
+            <th>
+                グループ
+            </th>
+            <th>
+                ユーザーID
+            </th>
+            <th>
+                ユーザー名
+            </th>
+            <th>
+                権限
+            </th>
+            <th>
+                ログオン
+            </th>
+            <th>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Count() != 0)
+        {
+            @foreach (var applicationUser in Model)
+            {
+                <tr>
+                    <td>
+                        @applicationUser.GroupName
+                    </td>
+                    <td>
+                        @applicationUser.UserId
+                    </td>
+                    <td>
+                        @applicationUser.DisplayUserName
+                    </td>
+                    <td>
+                        @applicationUser.UserRoleName
+                    </td>
+                    <td>
+                        @(applicationUser.IsValid ? "〇" : "-")
+                    </td>
+                    <td text-right">
+                        <a onclick="jQueryModalGet('@Url.Action("GetCreateOrEdit", "UserManage",new { id = applicationUser.Id})','ユーザー編集')" class="btn btn-info text-white"> 編集</a>
+                        <a onclick="jQueryModalDelete('@Url.Action("Delete", "UserManage",new { id = applicationUser.Id})')" class="btn btn-danger text-white"> 削除</a>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+<script>
+    $(document).ready(function () {
+        $("#applicationUserTable").DataTable({
+            oLanguage: {
+            /* 日本語化設定 */
+            sLengthMenu: "表示　_MENU_　件", // 表示行数欄(例 = 表示 10 件)
+            oPaginate: { // ページネーション欄
+                sNext: "次へ",
+                sPrevious: "前へ"
+            },
+            sInfo: "_TOTAL_ 件中 _START_件から_END_件 を表示しています", // 現在の表示欄(例 = 100 件中 20件から30件 を表示しています)
+            sSearch: "検索 ", // 検索欄(例 = 検索 --)
+            sZeroRecords: "表示するデータがありません", // 表示する行がない場合
+            sInfoEmpty: "0 件中 0件 を表示しています", // 行が表示されていない場合
+            sInfoFiltered: "全 _MAX_ 件から絞り込み" // 検索後に総件数を表示する場合
+            }
+        });
+    });
+</script>
