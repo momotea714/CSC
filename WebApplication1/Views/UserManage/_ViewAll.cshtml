@@ -4,9 +4,17 @@
     Layout = null;
 }
 
+<link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="~/lib/font-awesome-animation/font-awesome-animation.min.css" type="text/css" media="all" />
+
+
 <table class="table table-bordered table-striped" id="applicationUserTable">
     <thead>
         <tr>
+            <th style="text-align:center;"><input name="select_all" value="1" id="example-select-all" type="checkbox" /></th>
+            <th>
+                更新日時
+            </th>
             <th>
                 グループ
             </th>
@@ -20,9 +28,13 @@
                 権限
             </th>
             <th>
-                ログオン
+                表示/非表示
             </th>
             <th>
+                作成日時
+            </th>
+            <th class="text-center">
+                修正/削除
             </th>
         </tr>
     </thead>
@@ -32,6 +44,11 @@
             @foreach (var applicationUser in Model)
             {
                 <tr>
+                    <td style="text-align:center;">
+                    </td>
+                    <td>
+                        @applicationUser.UpdateDatetime
+                    </td>
                     <td>
                         @applicationUser.GroupName
                     </td>
@@ -47,9 +64,12 @@
                     <td>
                         @(applicationUser.IsValid ? "〇" : "-")
                     </td>
-                    <td text-right">
-                        <a onclick="jQueryModalGet('@Url.Action("GetCreateOrEdit", "UserManage",new { id = applicationUser.Id})','ユーザー編集')" class="btn btn-info text-white"> 編集</a>
-                        <a onclick="jQueryModalDelete('@Url.Action("Delete", "UserManage",new { id = applicationUser.Id})')" class="btn btn-danger text-white"> 削除</a>
+                    <td>
+                        @applicationUser.CreateDatetime
+                    </td>
+                    <td class="text-center">
+                        <a onclick="jQueryModalGet('@Url.Action("GetCreateOrEdit", "UserManage",new { id = applicationUser.Id})','ユーザー編集')" class="pointer fas fa-pen faa-wrench animated-hover" title="編集"></a>
+                        <a onclick="jQueryModalDelete('@Url.Action("Delete", "UserManage",new { id = applicationUser.Id})')" class="pointer fas fa-trash-alt faa-wrench animated-hover" title="削除"></a>
                     </td>
                 </tr>
             }
@@ -58,20 +78,86 @@
 </table>
 <script>
     $(document).ready(function () {
-        $("#applicationUserTable").DataTable({
-            oLanguage: {
-            /* 日本語化設定 */
-            sLengthMenu: "表示　_MENU_　件", // 表示行数欄(例 = 表示 10 件)
-            oPaginate: { // ページネーション欄
-                sNext: "次へ",
-                sPrevious: "前へ"
+        var table = $("#applicationUserTable").DataTable({
+            'columnDefs': [{
+                'targets': 0,
+                'searchable': false,
+                'orderable': false,
+                'className': 'dt-body-center',
+                'render': function (data, type, full, meta) {
+                    return '<input type="checkbox" name="id[]" value="'
+                        + $('<div/>').text(data).html() + '">';
+                }
             },
-            sInfo: "_TOTAL_ 件中 _START_件から_END_件 を表示しています", // 現在の表示欄(例 = 100 件中 20件から30件 を表示しています)
-            sSearch: "検索 ", // 検索欄(例 = 検索 --)
-            sZeroRecords: "表示するデータがありません", // 表示する行がない場合
-            sInfoEmpty: "0 件中 0件 を表示しています", // 行が表示されていない場合
-            sInfoFiltered: "全 _MAX_ 件から絞り込み" // 検索後に総件数を表示する場合
+            {
+                'targets': 8,
+                'searchable': false,
+                'orderable': false,
+            }],
+            'order': [1, 'desc'],
+            oLanguage: {
+                /* 日本語化設定 */
+                sLengthMenu: "表示　_MENU_　件", // 表示行数欄(例 = 表示 10 件)
+                oPaginate: { // ページネーション欄
+                    sNext: "次へ",
+                    sPrevious: "前へ"
+                },
+                sInfo: "_TOTAL_ 件中 _START_件から_END_件 を表示しています", // 現在の表示欄(例 = 100 件中 20件から30件 を表示しています)
+                sSearch: "検索 ", // 検索欄(例 = 検索 --)
+                sZeroRecords: "表示するデータがありません", // 表示する行がない場合
+                sInfoEmpty: "0 件中 0件 を表示しています", // 行が表示されていない場合
+                sInfoFiltered: "全 _MAX_ 件から絞り込み" // 検索後に総件数を表示する場合
             }
+        });
+
+        $('#example-select-all').on('click', function () {
+            // Check/uncheck all checkboxes in the table
+            var rows = table.rows({ 'search': 'applied' }).nodes();
+            $('input[type="checkbox"]', rows).prop('checked', this.checked);
+        });
+
+        // Handle click on checkbox to set state of "Select all" control
+        $('#example tbody').on('change', 'input[type="checkbox"]', function () {
+            // If checkbox is not checked
+            if (!this.checked) {
+                var el = $('#example-select-all').get(0);
+                // If "Select all" control is checked and has 'indeterminate' property
+                if (el && el.checked && ('indeterminate' in el)) {
+                    // Set visual state of "Select all" control
+                    // as 'indeterminate'
+                    el.indeterminate = true;
+                }
+            }
+        });
+
+        $('#frm-example').on('submit', function (e) {
+            var form = this;
+
+            // Iterate over all checkboxes in the table
+            table.$('input[type="checkbox"]').each(function () {
+                // If checkbox doesn't exist in DOM
+                if (!$.contains(document, this)) {
+                    // If checkbox is checked
+                    if (this.checked) {
+                        // Create a hidden element
+                        $(form).append(
+                            $('<input>')
+                                .attr('type', 'hidden')
+                                .attr('name', this.name)
+                                .val(this.value)
+                        );
+                    }
+                }
+            });
+
+            // FOR TESTING ONLY
+
+            // Output form data to a console
+            $('#example-console').text($(form).serialize());
+            console.log("Form submission", $(form).serialize());
+
+            // Prevent actual form submission
+            e.preventDefault();
         });
     });
 </script>

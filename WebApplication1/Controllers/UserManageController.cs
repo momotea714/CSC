@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using CsvHelper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -50,13 +53,44 @@ namespace WebApplication1.Controllers
             return View();
         }
 
+        public async Task<IActionResult> Download()
+        {
+            // CSV ファイル名
+            string csvFileName = "ユーザーデータ.csv";
+            // メモリを確保する
+            using (var memory = new MemoryStream())
+            using (var writer = new StreamWriter(memory, Encoding.GetEncoding("shift-jis")))
+            using (var csv = new CsvWriter(writer, new CultureInfo(0x0411, false)))
+            {
+                var applicationUsers = await ApplicationUserViewModel.GetAll(_context, _applicationUser);
+                csv.WriteRecords(applicationUsers);
+                writer.Flush();
+                // CSVファイルとして出力する
+                return File(memory.ToArray(), "text/csv", csvFileName);
+            }
+        }
+
+        //public byte[] GetCsvContents()
+        //{
+        //    var applicationUsers = ApplicationUserViewModel.GetAll(_context, _applicationUser);
+
+        //    using (var memory = new MemoryStream())
+        //    using (var writer = new StreamWriter(memory))
+        //    using (var csv = new CsvWriter(writer, new CultureInfo(0x0411, false)))
+        //    {
+        //        csv.WriteRecords((System.Collections.IEnumerable)applicationUsers);
+        //        writer.Flush();
+        //        return memory.ToArray();
+        //    }
+        //}
+
         public async Task<IActionResult> OnGetViewAllPartial()
         {
             var users = await ApplicationUserViewModel.GetAll(_context, _applicationUser);
             return new PartialViewResult
             {
                 ViewName = "_ViewAll",
-                ViewData = new ViewDataDictionary<IEnumerable<ApplicationUserViewModel>>(ViewData, users)
+                ViewData = new ViewDataDictionary<IEnumerable<ApplicationUserViewModel>>(ViewData, users.ToList())
             };
         }
 
@@ -87,7 +121,9 @@ namespace WebApplication1.Controllers
                         DisplayUserName = applicationUser.DisplayUserName,
                         GroupName = applicationUser.GroupName,
                         Password = applicationUser.Password,
-                        IsValid = applicationUser.IsValid
+                        IsValid = applicationUser.IsValid,
+                        CreateDatetime = DateTime.Now,
+                        UpdateDatetime = DateTime.Now
                     };
 
                     var result = await _userManager.CreateAsync(user, applicationUser.Password);
@@ -105,7 +141,7 @@ namespace WebApplication1.Controllers
                     user.Password = applicationUser.Password;
                     user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, applicationUser.Password);
                     user.IsValid = applicationUser.IsValid;
-
+                    user.UpdateDatetime = DateTime.Now;
                     _context.Users.Update(user);
 
                     var role = _context.UserRoles.First(x => x.UserId == id);

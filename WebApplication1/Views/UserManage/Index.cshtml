@@ -1,28 +1,39 @@
 ﻿@{
     ViewData["Title"] = "ユーザー管理";
 }
-<div class="card">
-    <div class="col-sm-12" style="padding:20px">
-        <a onclick="jQueryModalGet('@Url.Action("GetCreateOrEdit", "UserManage")','ユーザー登録')" class="btn bg-success">
-            新規作成
-        </a>
-        <a id="reload" class="btn bg-warning">
-            再読込
-        </a>
+
+@*https://fontawesome.com/icons*@
+<div class="card shadow">
+    <div class="col-sm-12" style="margin-top:20px;">
+        <button class="btn btn-sm btn-primary" onclick="jQueryModalGet('@Url.Action("GetCreateOrEdit", "UserManage")','ユーザー登録')">
+            <i class="fas fa-user-plus fa-lg faa-tada animated-hover"></i> ユーザー作成
+        </button>
+        <button id="reload" class="btn btn-sm btn-primary">
+            <i class="fas fa-sync-alt faa-spin animated-hover"></i> 再読み込み
+        </button>
+        <button id="download" class="btn btn-sm btn-primary">
+            <i class="fas fa-sync-alt faa-spin animated-hover"></i> download
+        </button>
     </div>
     <div id="viewAll" class="card-body table-responsive"></div>
 </div>
-@section Scripts
+
+    @section Scripts
 {
-    <script>
-        $(document).ready(function () {
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+
+        <script>
+            $(function () {
+
             $('#viewAll').load('@Url.Action("OnGetViewAllPartial", "UserManage")');
 
-        });
-        $(function () {
             $('#reload').on('click', function () {
                 $('#viewAll').load('@Url.Action("OnGetViewAllPartial", "UserManage")');
             });
+
+                $('#download').click(function () {
+                location.href = '@Url.Action("Download", "UserManage")';
+            });
         });
-    </script>
-}
+        </script>
+    }

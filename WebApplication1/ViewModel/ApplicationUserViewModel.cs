@@ -20,7 +20,8 @@ namespace WebApplication1.ViewModel
         public string UserRoleId { get; set; }
         public string UserRoleName { get; set; }
         public bool IsValid { get; set; }
-
+        public DateTime CreateDatetime { get; set; }
+        public DateTime UpdateDatetime { get; set; }
 
         public static async Task<IEnumerable<ApplicationUserViewModel>> GetAll(ApplicationDbContext context, IApplicationUserRepositoryAsync applicationUser)
         {
@@ -28,7 +29,7 @@ namespace WebApplication1.ViewModel
             var r = context.Roles.ToList();
 
             var applicationUsers = await applicationUser.GetAllAsync();
-            return applicationUsers.Select(x => ToViewModel(x, r, roles)).ToList();
+            return applicationUsers.OrderByDescending(x => x.UpdateDatetime).Select(x => ToViewModel(x, r, roles));
         }
 
         public static async Task<ApplicationUserViewModel> Get(ApplicationDbContext context, IApplicationUserRepositoryAsync applicationUser, string id)
@@ -54,6 +55,8 @@ namespace WebApplication1.ViewModel
                 UserRoleId = roles.First(y => applicationUser.Id == y.UserId).RoleId,
                 UserRoleName = r.First(z => z.Id == roles.First(y => applicationUser.Id == y.UserId).RoleId).NormalizedName,
                 IsValid = applicationUser.IsValid,
+                CreateDatetime = applicationUser.CreateDatetime,
+                UpdateDatetime = applicationUser.UpdateDatetime
             };
         }
 
@@ -67,6 +70,8 @@ namespace WebApplication1.ViewModel
                 Password = Password,
                 DisplayUserName = DisplayUserName,
                 IsValid = IsValid,
+                CreateDatetime = CreateDatetime,
+                UpdateDatetime = UpdateDatetime,
             };
         }
 

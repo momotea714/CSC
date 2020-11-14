@@ -5,8 +5,8 @@
     var userGroups = ViewBag.UserGroups as List<SelectListItem>;
     var isValidList = new List<SelectListItem>
 {
-        new SelectListItem { Value = true.ToString(),Text = "有効"},
-        new SelectListItem { Value = false.ToString(),Text = "無効"},
+        new SelectListItem { Value = true.ToString(),Text = "表示"},
+        new SelectListItem { Value = false.ToString(),Text = "非表示"},
     };
 
     if (string.IsNullOrEmpty(Model.Id))
@@ -15,53 +15,86 @@
     }
 }
 
+<style>
+
+    .tag-danger {
+        background-color: #d9534f;
+    }
+
+    .tag {
+        display: inline-block;
+        padding: 0.25em 0.4em;
+        font-size: 75%;
+        font-weight: bold;
+        line-height: 1;
+        color: #fff;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: baseline;
+        border-radius: 0.25rem;
+        margin-left: 4px;
+    }
+</style>
+
 <form id="create-form" method="post" asp-action="CreateOrEdit" asp-route-id="@Model.Id" onsubmit="return jQueryModalPost(this);">
+    <label class="control-label">所属グループ設定<span class="tag tag-danger">必須</span></label>
     <div class="form-group row">
-        <label class="col-md-3 col-form-label">グループ</label>
-        <div class="col-md-9">
+        <div class="col-6">
+            <label asp-for="GroupName" class="control-label">グループ</label>
             <select asp-for="GroupName" asp-items="userGroups" class="form-control"></select>
         </div>
     </div>
+
+    <label class="control-label">ログイン情報<span class="tag tag-danger">必須</span></label>
     <div class="form-group row">
-        <label class="col-md-3 col-form-label">ユーザーID</label>
-        <div class="col-md-9">
+        <div class="col-6">
+            <label asp-for="UserId" class="control-label">ユーザーID</label>
             <input type="text" autocomplete="off" asp-for="UserId" name="UserId" class="form-control">
-            <span asp-validation-for="UserId" class="text-danger"></span>
         </div>
-    </div>
-    <div class="form-group row">
-        <label class="col-md-3 col-form-label">パスワード</label>
-        <div class="col-md-9">
+        <div class="col-6">
+            <label asp-for="Password" class="control-label">パスワード</label>
             <input type="password" autocomplete="off" asp-for="Password" name="Password" class="form-control" value="@Model.Password">
-            <span asp-validation-for="Password" class="text-danger"></span>
         </div>
     </div>
+
+    <label class="control-label">表示用</label>
     <div class="form-group row">
-        <label class="col-md-3 col-form-label">ユーザー名</label>
-        <div class="col-md-9">
+        <div class="col-12">
+            <label asp-for="DisplayUserName" class="control-label">ユーザー名</label>
             <input type="text" autocomplete="off" asp-for="DisplayUserName" name="DisplayUserName" class="form-control">
-            <span asp-validation-for="DisplayUserName" class="text-danger"></span>
         </div>
     </div>
+
+    <label class="control-label">ユーザー設定<span class="tag tag-danger">必須</span></label>
     <div class="form-group row">
-        <label class="col-md-3 col-form-label">ユーザー権限</label>
-        <div class="col-md-9">
+        <div class="col-6">
+            <label asp-for="UserRoleId" class="control-label">ユーザー権限</label>
             <select asp-for="UserRoleId" asp-items="roles" class="form-control"></select>
         </div>
-    </div>
-    <div class="form-group row">
-        <label class="col-md-3 col-form-label">有効/無効</label>
-        <div class="col-md-9">
+        <div class="col-6">
+            <label asp-for="IsValid" class="control-label">表示/非表示</label>
             <select asp-for="IsValid" asp-items="isValidList" class="form-control"></select>
         </div>
     </div>
+    @*<div class="form-group row">
+            <label class="col-md-3 col-form-label">ユーザー権限</label>
+            <div class="col-md-9">
+                <select asp-for="UserRoleId" asp-items="roles" class="form-control"></select>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label">有効/無効</label>
+            <div class="col-md-9">
+                <select asp-for="IsValid" asp-items="isValidList" class="form-control"></select>
+            </div>
+        </div>*@
     <div class="form-group row">
         <div class="col-md-3">
         </div>
     </div>
     <div class="form-group justify-content-between">
         <button type="button" class="btn btn-secondary close-button" data-dismiss="modal">キャンセル</button>
-        <button type="submit" class="btn btn-primary save-button">登録</button>
+        <button type="submit" class="btn btn-primary save-button" style="float:right;">登録</button>
     </div>
 
 </form>
