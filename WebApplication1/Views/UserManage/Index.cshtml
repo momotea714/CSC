@@ -1,5 +1,7 @@
 ﻿@{
     ViewData["Title"] = "ユーザー管理";
+    var isValidList = ViewBag.IsValidList as List<SelectListItem>;
+    var userGroups = ViewBag.UserGroups as List<SelectListItem>;
 }
 
 @*https://fontawesome.com/icons*@
@@ -8,21 +10,24 @@
         <button class="btn btn-sm btn-primary" onclick="jQueryModalGet('@Url.Action("GetCreateOrEdit", "UserManage")','ユーザー登録')">
             <i class="fas fa-user-plus fa-lg faa-tada animated-hover"></i> ユーザー作成
         </button>
+        <button class="btn btn-sm btn-primary" onclick="jQueryModalGet('@Url.Action("GetCreateOrEdit", "UserManage")','ユーザー登録')">
+            <i class="pointer fas fa-pen faa-wrench animated-hover"></i> 一括修正
+        </button>
+        <button class="btn btn-sm btn-primary" onclick="jQueryModalGet('@Url.Action("GetCreateOrEdit", "UserManage")','ユーザー登録')">
+            <i class="pointer fas fa-trash-alt faa-wrench animated-hover"></i> 一括削除
+        </button>
         <button id="reload" class="btn btn-sm btn-primary">
             <i class="fas fa-sync-alt faa-spin animated-hover"></i> 再読み込み
-        </button>
-        <button id="download" class="btn btn-sm btn-primary">
-            <i class="fas fa-sync-alt faa-spin animated-hover"></i> download
         </button>
     </div>
     <div id="viewAll" class="card-body table-responsive"></div>
 </div>
 
-    @section Scripts
+@section Scripts
 {
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
 
-        <script>
+    <script>
             $(function () {
 
             $('#viewAll').load('@Url.Action("OnGetViewAllPartial", "UserManage")');
@@ -35,5 +40,5 @@
                 location.href = '@Url.Action("Download", "UserManage")';
             });
         });
-        </script>
-    }
+    </script>
+}

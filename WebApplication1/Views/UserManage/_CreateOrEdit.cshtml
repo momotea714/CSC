@@ -3,11 +3,7 @@
 
     var roles = ViewBag.Roles as List<SelectListItem>;
     var userGroups = ViewBag.UserGroups as List<SelectListItem>;
-    var isValidList = new List<SelectListItem>
-{
-        new SelectListItem { Value = true.ToString(),Text = "表示"},
-        new SelectListItem { Value = false.ToString(),Text = "非表示"},
-    };
+    var isValidList = ViewBag.IsValidList as List<SelectListItem>;
 
     if (string.IsNullOrEmpty(Model.Id))
     {

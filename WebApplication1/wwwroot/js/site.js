@@ -46,7 +46,7 @@ $(document).ready(function () {
         return false;
     }
     jQueryModalDelete = url => {
-        if (confirm('Are you sure to delete this record ?')) {
+        if (confirm('本当に削除してもよろしいですか?')) {
             try {
                 $.ajax({
                     type: 'POST',

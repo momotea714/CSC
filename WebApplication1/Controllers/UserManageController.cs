@@ -48,7 +48,20 @@ namespace WebApplication1.Controllers
         }
         public IEnumerable<ApplicationUser> applicationUsers { get; set; }
 
+        public List<SelectListItem> IsValidList = new List<SelectListItem>
+{
+        new SelectListItem { Value = true.ToString(),Text = "表示"},
+        new SelectListItem { Value = false.ToString(),Text = "非表示"},
+    };
+
         public IActionResult Index()
+        {
+            ViewBag.UserGroups = UserGroupViewModel.GetSelectList();
+            ViewBag.IsValidList = IsValidList;
+            return View();
+        }
+
+        public IActionResult BulkRegist()
         {
             return View();
         }
@@ -98,6 +111,7 @@ namespace WebApplication1.Controllers
         {
             ViewBag.Roles = RoleViewModel.GetSelectList();
             ViewBag.UserGroups = UserGroupViewModel.GetSelectList();
+            ViewBag.IsValidList = IsValidList;
 
             if (string.IsNullOrEmpty(id))
             {

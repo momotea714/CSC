@@ -1,0 +1,342 @@
+﻿<style>
+
+    .box {
+        position: relative;
+        background: #ffffff;
+        width: 100%;
+    }
+
+    .box-header {
+        color: #444;
+        display: block;
+        padding: 10px;
+        position: relative;
+        border-bottom: 1px solid #f4f4f4;
+        margin-bottom: 10px;
+    }
+
+    .box-tools {
+        position: absolute;
+        right: 10px;
+        top: 5px;
+    }
+
+    .dropzone-wrapper {
+        border: 2px dashed #91b0b3;
+        color: #92b0b3;
+        position: relative;
+        height: 150px;
+    }
+
+    .dropzone-desc {
+        position: absolute;
+        margin: 0 auto;
+        left: 0;
+        right: 0;
+        text-align: center;
+        width: 40%;
+        top: 50px;
+        font-size: 16px;
+    }
+
+    .dropzone,
+    .dropzone:focus {
+        position: absolute;
+        outline: none !important;
+        width: 100%;
+        height: 150px;
+        cursor: pointer;
+        opacity: 0;
+    }
+
+    .dropzone-wrapper:hover,
+    .dropzone-wrapper.dragover {
+        background: #ecf0f5;
+    }
+
+    .preview-zone {
+        text-align: center;
+    }
+
+        .preview-zone .box {
+            box-shadow: none;
+            border-radius: 0;
+            margin-bottom: 0;
+        }
+
+    .btn-primary {
+        background-color: crimson;
+        border: 1px solid #212121;
+    }
+</style>
+
+<button id="download" class="btn btn-sm btn-primary">
+    <i class="fas fa-sync-alt faa-spin animated-hover"></i> download
+</button>
+<form action="" method="POST" enctype="multipart/form-data">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <div class="dropzone-wrapper">
+                    <div class="dropzone-desc">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>登録したいcsvファイルを選択<br>またはこちらにドラッグしてください</p>
+                    </div>
+                    <input type="file" name="img_logo" class="dropzone">
+                </div>
+                <div class="preview-zone hidden">
+                    <div class="box box-solid">
+                        <div class="box-header with-border">
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-danger btn-xs remove-preview">
+                                    <i class="fa fa-times"></i> Reset The Field
+                                </button>
+                            </div>
+                        </div>
+                        <div class="box-body"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <button type="submit" class="btn btn-primary pull-right">Upload</button>
+        </div>
+    </div>
+</form>
+
+<div id="csv"></div>
+@section Scripts
+{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+
+    <script>
+        $(function () {
+            $('#download').click(function () {
+                location.href = '@Url.Action("Download", "UserManage")';
+            });
+
+            function readFile(input) {
+                var file = input.files[0];
+                if (file) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        var htmlPreview = '<p>' + input.files[0].name + '</p>';
+                        ToTable(reader);
+                        ToDataTable();
+                        var wrapperZone = $(input).parent();
+                        var previewZone = $(input).parent().parent().find('.preview-zone');
+                        var boxZone = $(input).parent().parent().find('.preview-zone').find('.box').find('.box-body');
+
+                        wrapperZone.removeClass('dragover');
+                        previewZone.removeClass('hidden');
+                        boxZone.empty();
+                        boxZone.append(htmlPreview);
+                    };
+
+                    // SJIS指定
+                    reader.readAsText(file, 'SJIS');
+                }
+            }
+
+            function reset(e) {
+                e.wrap('<form>').closest('form').get(0).reset();
+                e.unwrap();
+            }
+
+            $(".dropzone").change(function () {
+                readFile(this);
+            });
+
+            $('.dropzone-wrapper').on('dragover', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $(this).addClass('dragover');
+            });
+
+            $('.dropzone-wrapper').on('dragleave', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $(this).removeClass('dragover');
+            });
+
+            $('.remove-preview').on('click', function () {
+                var boxZone = $(this).parents('.preview-zone').find('.box-body');
+                var previewZone = $(this).parents('.preview-zone');
+                var dropzone = $(this).parents('.form-group').find('.dropzone');
+                boxZone.empty();
+                previewZone.addClass('hidden');
+                reset(dropzone);
+            });
+            var table = null;
+
+            function ToDataTable() {
+                table = $("#import_table").DataTable({
+                    "keys": true,
+                    "drawCallback": function (settings) {
+                        console.log('DataTables has redrawn the table');
+                    },
+                    oLanguage: {
+                        /* 日本語化設定 */
+                        sLengthMenu: "表示　_MENU_　件", // 表示行数欄(例 = 表示 10 件)
+                        oPaginate: { // ページネーション欄
+                            sNext: "次へ",
+                            sPrevious: "前へ"
+                        },
+                        sInfo: "_TOTAL_ 件中 _START_件から_END_件 を表示しています", // 現在の表示欄(例 = 100 件中 20件から30件 を表示しています)
+                        sSearch: "検索 ", // 検索欄(例 = 検索 --)
+                        sZeroRecords: "表示するデータがありません", // 表示する行がない場合
+                        sInfoEmpty: "0 件中 0件 を表示しています", // 行が表示されていない場合
+                        sInfoFiltered: "全 _MAX_ 件から絞り込み" // 検索後に総件数を表示する場合
+                    }
+                });
+            }
+
+            $('body').on('dblclick', 'td:not(:has(button))', function () {
+                $(this).attr('contenteditable', 'true');
+                var el = $(this);
+                var range = document.createRange();
+                var sel = window.getSelection();
+
+                if (el[0].childNodes.length > 0) {
+                    range.setStart(el[0].childNodes[0], 0);
+                    range.collapse(true);
+                    sel.removeAllRanges();
+                    sel.addRange(range);
+                }
+
+                el.focus();
+                $(this).blur(endEdition);
+            });
+
+            function endEdition() {
+                var el = $(this);
+                table.cell(el).invalidate().draw();
+                el.attr('contenteditable', 'false');
+                el.off('blur', endEdition); // To prevent another bind to this function
+            }
+
+            function ToTable(reader) {
+                var contents = reader.result;
+
+                // 改行で分割
+                lf = contents.split("\r\n");
+
+                var pre_num = 0;
+                var pre_line = '';
+                var sum_num = 0;
+                var lines = [];
+                var i = 0;
+
+                $.each(lf, function (lfKey, lfVal) {
+                    // 改行毎のダブルクオート数
+                    sum_num = lfVal.split('"').length - 1 + pre_num;
+
+                    if (pre_line == '') {
+                        multi_line = lfVal;
+                    } else {
+                        // 改行で前行と結合
+                        multi_line = pre_line + "\r\n" + lfVal;
+                    }
+
+                    if (sum_num % 2 == 0) {
+                        // ダブルクオートが偶数
+                        lines[i] = multi_line;
+                        pre_num = 0;
+                        pre_line = '';
+
+                        i++;
+                    } else {
+                        // ダブルクオートが奇数
+                        pre_num = sum_num;
+                        pre_line = multi_line;
+                    }
+                });
+
+                if (lines.length > 0) {
+                    var data = [];
+
+                    $.each(lines, function (linesKey, linesVal) {
+                        linesVal = $.trim(linesVal.replace(/(^[\s]+|[\s]+$)/g, ''));
+                        // 空行は除外
+                        if (linesVal !== '') {
+                            // カンマで分割
+                            var cell = linesVal.split(',');
+
+                            var pre_num = 0;
+                            var pre_data = '';
+
+                            var arr = [];
+                            var j = 0;
+
+                            $.each(cell, function (cellKey, cellVal) {
+                                // カンマ毎のダブルクオート数
+                                if (pre_data == '') {
+                                    multi_data = cellVal;
+                                } else {
+                                    // カンマで前セルと結合
+                                    multi_data = pre_data + "," + cellVal;
+                                }
+
+                                if (sum_num % 2 == 0) {
+                                    // ダブルクオートが偶数
+                                    // セル前後のダブルクオートを削除
+                                    multi_data = $.trim(multi_data.replace(/(^"+|"+$)/g, ''));
+
+                                    // セル内の""を"へ置換
+                                    multi_data = multi_data.replace(/""/g, '"');
+
+                                    arr[j] = multi_data;
+
+                                    pre_num = 0;
+                                    pre_data = '';
+
+                                    j++;
+                                } else {
+                                    // ダブルクオートが奇数
+                                    pre_num = sum_num;
+                                    pre_data = multi_data;
+                                }
+
+                            });
+
+                            data[linesKey] = arr;
+                        }
+                    });
+                }
+
+                // table生成
+                $('#csv').html("<table id='import_table' class='table'><thead></thead><tbody></tbody></table>");
+                $.each(data, function (dataKey, dataVal) {
+                    if (dataKey == 0) {
+                        $('thead').append('<tr id="row' + dataKey + '"></tr>');
+                        $.each(dataVal, function (data2Key, data2Val) {
+                            // セル内改行を<br>へ
+                            data2Val = data2Val.replace(/(\r\n|\n)/g, '<br>');
+                            $('tr[id=row' + dataKey + ']').append('<th>' + data2Val + '</th>');
+                        });
+                    }
+                    else {
+                        $('tbody').append('<tr id="row' + dataKey + '"></tr>');
+                        $.each(dataVal, function (data2Key, data2Val) {
+                            // セル内改行を<br>へ
+                            data2Val = data2Val.replace(/(\r\n|\n)/g, '<br>');
+                            $('tr[id=row' + dataKey + ']').append('<td>' + data2Val + '</td>');
+                        });
+                    }
+                    
+                });
+            }
+
+            function csvToArray(csv) {
+
+                return csv.split('\n').map(function (x) {
+                    return x.split(',');
+                })
+            };
+        });
+    </script>
+}
