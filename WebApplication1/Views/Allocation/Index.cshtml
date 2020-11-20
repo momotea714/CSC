@@ -22,7 +22,7 @@
         text-align: right;
     }
 </style>
-<h3>■グループ振り分け</h3>
+<h3>■採点者振り分け</h3>
 <div class="container-fluid border mt-2" style="background-color:ghostwhite">
     <h5>■試験選択</h5>
     <div class="mt-2 mb-2">
@@ -55,29 +55,32 @@
 <ul class="nav nav-pills shadow nav-fill flex-column flex-lg-row text-lg-center mt-2" style="font-size:20px" role="tablist">
     <li class="nav-item ">
         <a class="nav-link border active" id="item1-tab" data-toggle="tab" href="#item1" role="tab" aria-controls="item1" aria-selected="true">
-            グループ振り分け
-            <i class="far fa-question-circle" data-toggle="tooltip" data-placement="top" style="font-size:24px" data-html="true" data-delay="500" title="<h5>イメージ処理済みの試験名・科目の設問を問題種別単位に各グループへ振分けを行います。</h5>"></i>
+            振り分け
+            <i class="far fa-question-circle" data-toggle="tooltip" data-placement="top" style="font-size:24px" data-html="true" data-delay="500" title="<h5>イメージ処理済みの試験の設問を問題種別単位に各グループへ振分けを行います。</h5>"></i>
         </a>
     </li>
     <li class="nav-item">
         <a class="nav-link border" id="item2-tab" data-toggle="tab" href="#item2" role="tab" aria-controls="item2" aria-selected="false">
             振り分け修正
-            <i class="far fa-question-circle" data-toggle="tooltip" data-placement="top" style="font-size:24px" data-html="true" data-delay="500" title="<h5>すでに振り分けたデータを修正します</h5>"></i>
+            <i class="far fa-question-circle" data-toggle="tooltip" data-placement="top" style="font-size:24px" data-html="true" data-delay="500" title="<h5>イメージ処理済みの試験の設問を問題種別単位に各採点者へ振分けを行います。</h5>"></i>
         </a>
     </li>
     <li class="nav-item">
         <a class="nav-link border" id="item3-tab" data-toggle="tab" href="#item3" role="tab" aria-controls="item3" aria-selected="false">
-            グループ振り分け数管理
+            振り分け数管理
             <i class="far fa-question-circle" data-toggle="tooltip" data-placement="top" style="font-size:24px" data-html="true" data-delay="500" title="<h5>各グループに振分けたバッチ数等を確認します。</h5>"></i>
         </a>
     </li>
 </ul>
+
 <div class="tab-content">
     <div class="tab-pane fade show active" id="item1" role="tabpanel" aria-labelledby="item1-tab">
-        <h4 class="mt-2">■グループ振り分け</h4>
-        <div class="row">
+        <div class="mt-4 row">
             <div class="col-md-3">
                 <div style="margin-bottom:5px;">
+                    <div class="btnLeft">
+                        <h4>■振分対象</h4>
+                    </div>
                     <div class="btnRight">
                         <button class="btn btn-sm btn-primary">
                             自動振り分け
@@ -145,6 +148,7 @@
                         <tr class="text-center" style="background-color:ghostwhite">
                             <th class="align-middle" rowspan="2" width="5%">選択</th>
                             <th class="align-middle" rowspan="2">グループ名</th>
+                            <th class="align-middle" rowspan="2">採点者名</th>
                             <th class="align-middle" rowspan="1" colspan="5">振分済み</th>
                             <th class="align-middle" rowspan="2">振分済み<br>合計</th>
                             <th class="align-middle" rowspan="1">振分率</th>
@@ -181,6 +185,7 @@
                                         </span>
                                     </td>
                                     <td class="align-middle">グループ@(i.ToString())</td>
+                                    <td class="align-middle">ユーザー0@(i.ToString())</td>
                                     <td class="align-middle">@jukensha</td>
                                     <td class="align-middle">@sentakusi</td>
                                     <td class="align-middle">@tanE</td>
@@ -207,7 +212,7 @@
         </div>
     </div>
     <div class="tab-pane fade" id="item2" role="tabpanel" aria-labelledby="item2-tab">
-        <h4 class="mt-2">■振り分け修正</h4>
+        <h4 class="mt-4">■振り分け修正</h4>
         <div class="form-group mt-2 ml-2">
             <div id="file" class="input-group">
                 <div class="custom-file">
@@ -365,92 +370,92 @@
         </div>
     </div>
     <div class="tab-pane fade" id="item3" role="tabpanel" aria-labelledby="item3-tab">
-        <h4 class="mt-2">■グループ振り分け数管理</h4>
+        <h4 class="mt-4">■振り分け数管理</h4>
         <div class="row">
-            <div class="col-4 border-right">
-                <h5>【項目リスト】</h5>
-                <table class="table table-bordered table-sm border">
+            <div class="col-6">
+                <h5>【グループ別振り分け数】</h5>
+                <table class="table table-bordered table-sm table-striped border">
                     <thead>
-                        <tr class="text-center col-12" style="background-color:ghostwhite">
-                            <th style="width:100px">No</th>
-                            <th style="width:300px">項目名</th>
-                            <th style="width:100px">配点</th>
+                        <tr class="text-center" style="background-color:ghostwhite">
+                            <th class="align-middle" rowspan="2">グループ名</th>
+                            <th class="align-middle" rowspan="1" colspan="5">振分済み</th>
+                            <th class="align-middle" rowspan="2">振分済み<br>合計</th>
+                        </tr>
+                        <tr class="text-center" style="background-color:ghostwhite">
+                            <th class="align-middle" rowspan="1">受験者</th>
+                            <th class="align-middle" rowspan="1">選択肢</th>
+                            <th class="align-middle" rowspan="1">単E</th>
+                            <th class="align-middle" rowspan="1">単M</th>
+                            <th class="align-middle" rowspan="1">単H</th>
+                            
                         </tr>
                     </thead>
-                    <tbody class="text-center" style="cursor:pointer">
-                        <tr onclick="">
-                            <td>1</td>
-                            <td>1①</td>
-                            <td><input type="text" class="input-group-sm text-center w-100 border-0 p-0 m-0" value="20" /></td>
-                        </tr>
-                        <tr onclick="">
-                            <td>2</td>
-                            <td>1②</td>
-                            <td><input type="text" class="input-group-sm text-center w-100 border-0" value="20" /></td>
-                        </tr>
-                        <tr onclick="">
-                            <td>3</td>
-                            <td>2①ア</td>
-                            <td><input type="text" class="input-group-sm text-center w-100 border-0" value="20" /></td>
-                        </tr>
-                        <tr onclick="">
-                            <td>4</td>
-                            <td>2①イ</td>
-                            <td><input type="text" class="input-group-sm text-center w-100 border-0" value="20" /></td>
-                        </tr>
-                        <tr onclick="">
-                            <td>5</td>
-                            <td>2②</td>
-                            <td><input type="text" class="input-group-sm text-center w-100 border-0" value="20" /></td>
-                        </tr>
+                    <tbody class="text-center " style="cursor:pointer">
+                        @{
+                            var rnd1 = new Random();
+                            for (int i = 1; i <= 10; i++)
+                            {
+                                var jukensha = rnd.Next(0, 10);
+                                var sentakusi = rnd.Next(0, 10);
+                                var tanE = rnd.Next(0, 10);
+                                var tanM = rnd.Next(0, 10);
+                                var tanH = rnd.Next(0, 10);
+                                <tr>
+                                    <td class="align-middle">グループ@(i.ToString())</td>
+                                    <td class="align-middle">@jukensha</td>
+                                    <td class="align-middle">@sentakusi</td>
+                                    <td class="align-middle">@tanE</td>
+                                    <td class="align-middle">@tanM</td>
+                                    <td class="align-middle">@tanH</td>
+                                    <td class="align-middle">@(jukensha + sentakusi + tanE + tanM + tanH)</td>
+                                   
+                                </tr>
+                            }
+                        }
                     </tbody>
                 </table>
             </div>
-            <div class="container-fluid text-nowrap col-8">
-                <div class="row">
-                    <div class="col-6 border-right">
-                        <h5>■模範解答登録</h5>
-                        <div class="form-group">
-                            <div id="file" class="input-group mr-1 ml-1">
-                                <div class="custom-file">
-                                    <input type="file" id="cutomfile" class="custom-file-input" name="cutomfile[]" multiple />
-                                    <label class="custom-file-label" for="customfile" data-browse="参照">ファイル選択...</label>
-                                </div>
-                                <div class="input-group-append">
-                                    <button type="button" class="btn btn-outline-secondary reset">取消</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <h5>■ヘルプ情報登録</h5>
-                        <div class="form-group">
-                            <div id="file" class="input-group">
-                                <div class="custom-file">
-                                    <input type="file" id="cutomfile" class="custom-file-input" name="cutomfile[]" multiple />
-                                    <label class="custom-file-label" for="customfile" data-browse="参照">ファイル選択...</label>
-                                </div>
-                                <div class="input-group-append">
-                                    <button type="button" class="btn btn-outline-secondary reset">取消</button>
-                                </div>
-                            </div>
-                        </div>
-                        <p>
-                            <div class="form-group mr-1">
-                                <label for="commentArea">【ヘルプコメント】</label>
-                                <textarea class="form-control" id="commentArea" rows="3"></textarea>
-                            </div>
-                        </p>
-                    </div>
-                </div>
-                <div class="container col-4 mt-5">
-                    <p>
-                        <button id="scoringOrder" type="button" class="form-control btn-outline-primary" onclick="">登　録</button>
-                    </p>
-                    <p>
-                        <button id="scoringOrder" type="button" class="form-control btn-outline-danger" onclick="">削　除</button>
-                    </p>
-                </div>
+            <div class="col-6">
+                <h5>【採点者別振り分け数】</h5>
+                <table class="table table-bordered table-sm table-striped border">
+                    <thead>
+                        <tr class="text-center" style="background-color:ghostwhite">
+                            <th class="align-middle" rowspan="2">採点者名</th>
+                            <th class="align-middle" rowspan="1" colspan="5">振分済み</th>
+                            <th class="align-middle" rowspan="2">振分済み<br>合計</th>
+                        </tr>
+                        <tr class="text-center" style="background-color:ghostwhite">
+                            <th class="align-middle" rowspan="1">受験者</th>
+                            <th class="align-middle" rowspan="1">選択肢</th>
+                            <th class="align-middle" rowspan="1">単E</th>
+                            <th class="align-middle" rowspan="1">単M</th>
+                            <th class="align-middle" rowspan="1">単H</th>
+                           
+                    </thead>
+                    <tbody class="text-center " style="cursor:pointer">
+                        @{
+                            var rnd2 = new Random();
+                            for (int i = 1; i <= 10; i++)
+                            {
+                                var jukensha = rnd.Next(0, 10);
+                                var sentakusi = rnd.Next(0, 10);
+                                var tanE = rnd.Next(0, 10);
+                                var tanM = rnd.Next(0, 10);
+                                var tanH = rnd.Next(0, 10);
+                                <tr>
+                                    <td class="align-middle">ユーザー0@(i.ToString())</td>
+                                    <td class="align-middle">@jukensha</td>
+                                    <td class="align-middle">@sentakusi</td>
+                                    <td class="align-middle">@tanE</td>
+                                    <td class="align-middle">@tanM</td>
+                                    <td class="align-middle">@tanH</td>
+                                    <td class="align-middle">@(jukensha + sentakusi + tanE + tanM + tanH)</td>
+                                    
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
