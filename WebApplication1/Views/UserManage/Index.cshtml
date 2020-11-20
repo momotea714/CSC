@@ -1,28 +1,293 @@
-﻿@{
+﻿@model IEnumerable<ApplicationUserViewModel>
+
+@{
+    var roles = ViewBag.Roles as List<SelectListItem>;
+    var userGroups = ViewBag.UserGroups as List<SelectListItem>;
+    var isValidList = ViewBag.IsValidList as List<SelectListItem>;
     ViewData["Title"] = "ユーザー管理";
 }
-<div class="card">
-    <div class="col-sm-12" style="padding:20px">
-        <a onclick="jQueryModalGet('@Url.Action("GetCreateOrEdit", "UserManage")','ユーザー登録')" class="btn bg-success">
-            新規作成
-        </a>
-        <a id="reload" class="btn bg-warning">
-            再読込
-        </a>
+
+
+@*https://fontawesome.com/icons*@
+<h3>■ユーザー管理</h3>
+<div class="container-fluid border mt-2" style="background-color:ghostwhite">
+    <h5>■表示条件変更</h5>
+    <form class="mt-2 ">
+        <div class="row text-nowrap ">
+            <div class="ml-2">
+                <label for="search_UserGroup" class="">
+                    【グループ】
+                </label>
+                <select id="search_UserGroup" asp-items="userGroups" class="form-control"></select>
+            </div>
+            <div class="ml-2">
+                <label for="userId">
+                    【ユーザーID】
+                </label>
+                <input id="search_UserId" type="text" class="col-12 bg-white form-control" />
+            </div>
+            <div class="ml-2">
+                <label for="examStart">
+                    【権限】
+                </label>
+                <select id="search_UserRole" asp-items="roles" class="form-control"></select>
+            </div>
+            <div class="ml-2">
+                <label for="examEnd">
+                    【表示/非表示】
+                </label>
+                <select id="search_IsValid" asp-items="isValidList" class="form-control"></select>
+            </div>
+            <div class="text-center mt-4 mb-4 ml-4">
+                <button type="submit" class="btn-lg form-control btn-outline-primary">表示切替</button>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="border-top border mt-2 mb-2"></div>
+<h5 class="ml-1">■ユーザー一覧</h5>
+<div class="row">
+    <div class="col-10 justify-content-between text-nowrap">
+        <div class="container-fluid mt-1 shadow">
+            <button class="btn btn-sm btn-primary" onclick="location.href='@Url.Action("BulkRegist", "UserManage")'" style="margin-top:10px;">
+                <i class="pointer fas fa-user faa-wrench animated-hover"></i> 一括登録
+            </button>
+            <button class="btn btn-sm btn-primary" onclick="jQueryModalGet('@Url.Action("GetCreateOrEdit", "UserManage")','ユーザー情報一括修正')" style="margin-top:10px;">
+                <i class="pointer fas fa-pen faa-wrench animated-hover"></i> 一括修正
+            </button>
+            <div style="margin-top:10px;padding-bottom:20px;">
+                <table id="examTable" class="table table-bordered table-striped">
+                    <thead>
+                        <tr class="text-center" style="background-color:ghostwhite">
+                            <th data-id="repoNo" class="">
+                                <input name="select_all" value="1" id="example-select-all" type="checkbox" />
+                            </th>
+                            <th class="">更新日時</th>
+                            <th class="">グループ</th>
+                            <th class="">ユーザーID</th>
+                            <th class="">ユーザー名</th>
+                            <th class="">権限</th>
+                            <th class="">表示/非表示</th>
+                            <th class="">作成日時</th>
+                        </tr>
+                    </thead>
+                    <tbody style="cursor:pointer">
+                        @*@for (var count = 1; count <= 20; count++)
+                            {
+                                <tr class="text-center" id=@("repoTable" + (1000 + count)) onclick="FormDetail('repoTable' + @(1000 + count));">
+                                    <td></td>
+                                    <td>@DateTime.Now.AddDays(1).ToString("yyyy/MM/dd")</td>
+                                    <td>@("2020年度入学試験" +count)</td>
+                                    <td>@DateTime.Now.AddDays(1).ToString("yyyy/MM/dd")</td>
+                                    <td>@DateTime.Now.AddDays(2).ToString("yyyy/MM/dd")</td>
+                                    <td>管理者</td>
+                                    <td>表示</td>
+                                    <td>@DateTime.Now.ToString()</td>
+                                </tr>
+                            }*@
+                        @if (Model.Count() != 0)
+                        {
+                            @for (var count = 1; count <= 20; count++)
+                            {
+                                @foreach (var applicationUser in Model)
+                                {
+                                    <tr class="text-center" id="@(applicationUser.UserId + count.ToString())" onclick="FormDetail('@(applicationUser.UserId + count.ToString())');">
+                                        <td style="text-align:center;">
+                                        </td>
+                                        <td>
+                                            @DateTime.Now.AddDays(count).ToString("yyyy/MM/dd hh:MM:ss")
+                                        </td>
+                                        <td>
+                                            @applicationUser.GroupName
+                                        </td>
+                                        <td>
+                                            @applicationUser.UserId
+                                        </td>
+                                        <td>
+                                            @applicationUser.DisplayUserName
+                                        </td>
+                                        <td>
+                                            @applicationUser.UserRoleName
+                                        </td>
+                                        <td>
+                                            @(applicationUser.IsValid ? "表示" : "非表示")
+                                        </td>
+                                        <td>
+                                            @DateTime.Now.AddDays(count).ToString("yyyy/MM/dd hh:MM:ss")
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-    <div id="viewAll" class="card-body table-responsive"></div>
+    <div class="col-2  mt-1 shadow" style="background-color: aliceblue;">
+        <div class="container-fluid text-nowrap">
+            <form class="mt-4">
+                <div class="text-nowrap">
+                    <div class="ml-2">
+                        <label for="userGroup" class="">
+                            【グループ】
+                        </label>
+                        <select id="userGroup" asp-items="userGroups" class="form-control"></select>
+                    </div>
+                    <div class="ml-2">
+                        <label for="userId">
+                            【ユーザーID】
+                        </label>
+                        <input id="userId" type="text" class="col-12 bg-white form-control" />
+                    </div>
+                    <div class="ml-2">
+                        <label for="userName">
+                            【ユーザー名】
+                        </label>
+                        <input id="userName" type="text" class="col-12 bg-white form-control" />
+                    </div>
+                    <div class="ml-2">
+                        <label for="userRole">
+                            【権限】
+                        </label>
+                        <select id="userRole" asp-items="roles" class="form-control"></select>
+                    </div>
+                    <div class="ml-2">
+                        <label for="isValid">
+                            【表示/非表示】
+                        </label>
+                        <select id="isValid" asp-items="isValidList" class="form-control"></select>
+                    </div>
+                    <div class="container mt-5">
+                        <p>
+                            <button id="scoringOrder1" type="button" class="form-control btn-outline-primary" onclick="">新規登録</button>
+                        </p>
+                        <p>
+                            <button id="scoringOrder2" type="button" class="form-control btn-outline-primary" onclick="Regist();">登　録</button>
+                        </p>
+                        <p>
+                            <button id="scoringOrder3" type="button" class="form-control btn-outline-danger" onclick="">削　除</button>
+                        </p>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 @section Scripts
 {
     <script>
-        $(document).ready(function () {
-            $('#viewAll').load('@Url.Action("OnGetViewAllPartial", "UserManage")');
-
-        });
         $(function () {
-            $('#reload').on('click', function () {
-                $('#viewAll').load('@Url.Action("OnGetViewAllPartial", "UserManage")');
+            var table = $("#examTable").DataTable({
+                oLanguage: {
+                    /* 日本語化設定 */
+                    sLengthMenu: "表示　_MENU_　件", // 表示行数欄(例 = 表示 10 件)
+                    oPaginate: { // ページネーション欄
+                        sNext: "次へ",
+                        sPrevious: "前へ"
+                    },
+                    sInfo: "_TOTAL_ 件中 _START_件から_END_件 を表示しています", // 現在の表示欄(例 = 100 件中 20件から30件 を表示しています)
+                    sSearch: "検索 ", // 検索欄(例 = 検索 --)
+                    sZeroRecords: "表示するデータがありません", // 表示する行がない場合
+                    sInfoEmpty: "0 件中 0件 を表示しています", // 行が表示されていない場合
+                    sInfoFiltered: "全 _MAX_ 件から絞り込み" // 検索後に総件数を表示する場合
+                },
+                columnDefs: [{
+                    'targets': 0,
+                    'searchable': false,
+                    'orderable': false,
+                    'className': 'dt-body-center',
+                    'render': function (data, type, full, meta) {
+                        return '<input type="checkbox" name="check" value="">';
+                    }
+                }],
+                order: [1, 'desc'],
+                // 件数切替機能 無効
+                lengthChange: true,
+                // 検索機能 無効
+                searching: true,
+                // ソート機能 無効
+                ordering: true,
+                // 情報表示 無効
+                info: true,
+                // ページング機能 無効
+                paging: true,
+                // 初期表示時には並び替えをしない
+                // 状態を保存する機能をつける
+                stateSave: true,
+            });
+
+            $('#example-select-all').on('click', function () {
+                // Check/uncheck all checkboxes in the table
+                var rows = table.rows({ 'search': 'applied' }).nodes();
+                $('input[type="checkbox"]', rows).prop('checked', this.checked);
+            });
+
+            // Handle click on checkbox to set state of "Select all" control
+            $('#example tbody').on('change', 'input[type="checkbox"]', function () {
+                // If checkbox is not checked
+                if (!this.checked) {
+                    var el = $('#example-select-all').get(0);
+                    // If "Select all" control is checked and has 'indeterminate' property
+                    if (el && el.checked && ('indeterminate' in el)) {
+                        // Set visual state of "Select all" control
+                        // as 'indeterminate'
+                        el.indeterminate = true;
+                    }
+                }
+            });
+
+            $('#frm-example').on('submit', function (e) {
+                var form = this;
+                // Iterate over all checkboxes in the table
+                table.$('input[type="checkbox"]').each(function () {
+                    // If checkbox doesn't exist in DOM
+                    if (!$.contains(document, this)) {
+                        // If checkbox is checked
+                        if (this.checked) {
+                            // Create a hidden element
+                            $(form).append(
+                                $('<input>')
+                                    .attr('type', 'hidden')
+                                    .attr('name', this.name)
+                                    .val(this.value)
+                            );
+                        }
+                    }
+                });
+                // FOR TESTING ONLY
+                // Output form data to a console
+                $('#example-console').text($(form).serialize());
+                console.log("Form submission", $(form).serialize());
+                // Prevent actual form submission
+                e.preventDefault();
+
+
             });
         });
+
+        function FormDetail(repoNo) {
+            PageRefresh();
+            $('#' + repoNo).css({ 'background-color': '#c1f5f5' });
+            var dataArr = $('#' + repoNo)[0].innerText.split('\t');
+            //alert(dataArr[0]);
+            $('#userGroup').val(dataArr[2]);
+            $('#userId').val(dataArr[3]);
+            $('#userName').val(dataArr[4]);
+            $('#userRole').val(dataArr[5]);
+            $('#isValid').val(dataArr[6]);
+        };
+
+        function PageRefresh() {
+            $('tbody > tr').css({ 'background-color': '' });
+            $('#inFormNo').val('');
+            $('#inExamId').val('');
+            $('#inExamName').val('');
+            $('#inFormName').val('');
+            $('#inSubject').val('');
+            $('#inItemCount').val('');
+            $('#inTotalScore').val('');
+            $('#detailButton').css('display', 'none');
+        };
     </script>
 }

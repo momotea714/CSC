@@ -11,6 +11,7 @@ namespace WebApplication1.ViewModel
         public static List<SelectListItem> GetSelectList()
         {
             return new List<SelectListItem> {
+            new SelectListItem{ Value = "",Text = ""},
             new SelectListItem{ Value = "グループ1",Text = "グループ1"},
             new SelectListItem{ Value = "グループ2",Text = "グループ2"},
             new SelectListItem{ Value = "グループ3",Text = "グループ3"},

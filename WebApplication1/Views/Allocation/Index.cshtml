@@ -1,0 +1,483 @@
+﻿@{
+    ViewData["Title"] = "グループ振り分け";
+
+    //var tests = new
+    var mondaishubetu = new List<dynamic>
+{
+        new {Id = "mondaishubetu1", Shubetu = "単E", BatchSuu = 60,SetsumonSuu = 60, HuriwakeSuu = 0, ZanSuu = 60},
+        new {Id = "mondaishubetu2", Shubetu = "単M", BatchSuu = 20,SetsumonSuu = 10, HuriwakeSuu = 0, ZanSuu = 20},
+        new {Id = "mondaishubetu3", Shubetu = "単H", BatchSuu = 10,SetsumonSuu = 2, HuriwakeSuu = 0, ZanSuu = 10},
+        new {Id = "mondaishubetu4", Shubetu = "選択肢", BatchSuu = 50,SetsumonSuu = 50, HuriwakeSuu = 0, ZanSuu = 50},
+        new {Id = "mondaishubetu5", Shubetu = "受験者", BatchSuu = 50,SetsumonSuu = 50, HuriwakeSuu = 0, ZanSuu = 50},
+    };
+}
+
+<style>
+    div.btnLeft {
+        text-align: left;
+        float: left;
+    }
+
+    div.btnRight {
+        text-align: right;
+    }
+</style>
+<h3>■グループ振り分け</h3>
+<div class="container-fluid border mt-2" style="background-color:ghostwhite">
+    <h5>■試験選択</h5>
+    <div class="mt-2 mb-2">
+        <div class="form-inline">
+            <label class="col-auto" for="inExamId">試験ID：</label>
+            <select id="inExamId1" class="col-auto form-control custom-select" style="min-width:200px;">
+                <option value='' selected></option>
+                <option value='2020年度入学試験'>20-1009-1</option>
+                <option value='2021年度入学試験'>21-1009-2</option>
+                <option value='2022年度入学試験'>22-1009-3</option>
+                <option value='2023年度入学試験'>23-1009-4</option>
+                <option value='2024年度入学試験'>24-1009-5</option>
+            </select>
+            <select id="inExamId2" class="col-auto form-control custom-select" style="min-width:400px;">
+                <option value='' selected></option>
+                <option value='2020年度入学試験'>2020年度入学試験</option>
+                <option value='2021年度入学試験'>2021年度入学試験</option>
+                <option value='2022年度入学試験'>2022年度入学試験</option>
+                <option value='2023年度入学試験'>2023年度入学試験</option>
+                <option value='2024年度入学試験'>2024年度入学試験</option>
+            </select>
+            <span class="ml-4">
+                <b>
+                    受験者数：1200人　バッチ数：190　設問数：172
+                </b>
+            </span>
+        </div>
+    </div>
+</div>
+<ul class="nav nav-pills shadow nav-fill flex-column flex-lg-row text-lg-center mt-2" style="font-size:20px" role="tablist">
+    <li class="nav-item ">
+        <a class="nav-link border active" id="item1-tab" data-toggle="tab" href="#item1" role="tab" aria-controls="item1" aria-selected="true">
+            グループ振り分け
+            <i class="far fa-question-circle" data-toggle="tooltip" data-placement="top" style="font-size:24px" data-html="true" data-delay="500" title="<h5>イメージ処理済みの試験名・科目の設問を問題種別単位に各グループへ振分けを行います。</h5>"></i>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link border" id="item2-tab" data-toggle="tab" href="#item2" role="tab" aria-controls="item2" aria-selected="false">
+            振り分け修正
+            <i class="far fa-question-circle" data-toggle="tooltip" data-placement="top" style="font-size:24px" data-html="true" data-delay="500" title="<h5>すでに振り分けたデータを修正します</h5>"></i>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link border" id="item3-tab" data-toggle="tab" href="#item3" role="tab" aria-controls="item3" aria-selected="false">
+            グループ振り分け数管理
+            <i class="far fa-question-circle" data-toggle="tooltip" data-placement="top" style="font-size:24px" data-html="true" data-delay="500" title="<h5>各グループに振分けたバッチ数等を確認します。</h5>"></i>
+        </a>
+    </li>
+</ul>
+<div class="tab-content">
+    <div class="tab-pane fade show active" id="item1" role="tabpanel" aria-labelledby="item1-tab">
+        <h4 class="mt-2">■グループ振り分け</h4>
+        <div class="row">
+            <div class="col-md-3">
+                <div style="margin-bottom:5px;">
+                    <div class="btnRight">
+                        <button class="btn btn-sm btn-primary">
+                            自動振り分け
+                            <i class="far fa-question-circle" data-toggle="tooltip" data-placement="top" style="font-size:18px" data-html="true" data-delay="500" title="<h5>各グループに振分けたバッチ数等を確認します。</h5>"></i>
+                        </button>
+                    </div>
+                </div>
+                <table class="table table-bordered table-striped border">
+                    <thead>
+                        <tr class="text-center" style="background-color:ghostwhite">
+                            <th class="">問題種別</th>
+                            <th class="">バッチ数</th>
+                            <th class="">設問数</th>
+                            <th class="">振分数</th>
+                            <th class="">振分残数</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-center" style="cursor:pointer">
+                        @foreach (var item in mondaishubetu)
+                        {
+                            <tr id="@(item.Id)" onclick="FormDetail('@(item.Id)');">
+                                <td>@(item.Shubetu)</td>
+                                <td>@(item.BatchSuu)</td>
+                                <td>@(item.SetsumonSuu)</td>
+                                <td>@(item.HuriwakeSuu)</td>
+                                <td>@(item.ZanSuu)</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-9">
+                <div style="margin-bottom:5px;">
+                    <div class="btnLeft">
+                        <button class="btn btn-sm btn-primary">
+                            全選択
+                        </button>
+                        <button class="btn btn-sm btn-primary">
+                            全解除
+                        </button>
+                        <button class="btn btn-sm btn-primary">
+                            チェック反転
+                        </button>
+                        <button class="btn btn-sm btn-primary">
+                            クリア
+                        </button>
+                    </div>
+                    <div class="btnRight">
+                        <button class="btn btn-sm btn-primary">
+                            均等率設定
+                            <i class="far fa-question-circle" data-toggle="tooltip" data-placement="top" style="font-size:18px" data-html="true" data-delay="500" title="<h5>各グループに振分けたバッチ数等を確認します。</h5>"></i>
+                        </button>
+                        <button class="btn btn-sm btn-primary">
+                            自動設定
+                            <i class="far fa-question-circle" data-toggle="tooltip" data-placement="top" style="font-size:18px" data-html="true" data-delay="500" title="<h5>各グループに振分けたバッチ数等を確認します。</h5>"></i>
+                        </button>
+                        <button class="btn btn-sm btn-primary">
+                            確定
+                            <i class="far fa-question-circle" data-toggle="tooltip" data-placement="top" style="font-size:18px" data-html="true" data-delay="500" title="<h5>各グループに振分けたバッチ数等を確認します。</h5>"></i>
+                        </button>
+                    </div>
+                </div>
+                <table class="table table-bordered table-sm table-striped border">
+                    <thead>
+                        <tr class="text-center" style="background-color:ghostwhite">
+                            <th class="align-middle" rowspan="2" width="5%">選択</th>
+                            <th class="align-middle" rowspan="2">グループ名</th>
+                            <th class="align-middle" rowspan="1" colspan="5">振分済み</th>
+                            <th class="align-middle" rowspan="2">振分済み<br>合計</th>
+                            <th class="align-middle" rowspan="1">振分率</th>
+                            <th class="align-middle" rowspan="1">振分数</th>
+                        </tr>
+                        <tr class="text-center" style="background-color:ghostwhite">
+                            <th class="align-middle" rowspan="1">受験者</th>
+                            <th class="align-middle" rowspan="1">選択肢</th>
+                            <th class="align-middle" rowspan="1">単E</th>
+                            <th class="align-middle" rowspan="1">単M</th>
+                            <th class="align-middle" rowspan="1">単H</th>
+                            <th width="10%">
+                                <input type="number" class="form-control" placeholder="%" style="text-align: right;" />
+                            </th>
+                            <th width="10%">
+                                <input type="number" class="form-control" />
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-center " style="cursor:pointer">
+                        @{
+                            var rnd = new Random();
+                            for (int i = 1; i <= 10; i++)
+                            {
+                                var jukensha = rnd.Next(0, 10);
+                                var sentakusi = rnd.Next(0, 10);
+                                var tanE = rnd.Next(0, 10);
+                                var tanM = rnd.Next(0, 10);
+                                var tanH = rnd.Next(0, 10);
+                                <tr>
+                                    <td class="center align-middle">
+                                        <span>
+                                            <input type="checkbox" class="checkbox" />
+                                        </span>
+                                    </td>
+                                    <td class="align-middle">グループ@(i.ToString())</td>
+                                    <td class="align-middle">@jukensha</td>
+                                    <td class="align-middle">@sentakusi</td>
+                                    <td class="align-middle">@tanE</td>
+                                    <td class="align-middle">@tanM</td>
+                                    <td class="align-middle">@tanH</td>
+                                    <td class="align-middle">@(jukensha + sentakusi + tanE + tanM + tanH)</td>
+                                    <td>
+                                        <input type="number" class="form-control" placeholder="%" style="text-align: right;" />
+                                    </td>
+                                    <td>
+                                        <input type="number" class="form-control" />
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+                <div class="btnRight">
+                    <button class="btn btn-lg btn-primary" disabled>
+                        振分登録
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane fade" id="item2" role="tabpanel" aria-labelledby="item2-tab">
+        <h4 class="mt-2">■振り分け修正</h4>
+        <div class="form-group mt-2 ml-2">
+            <div id="file" class="input-group">
+                <div class="custom-file">
+                    <input type="file" id="cutomfile" class="custom-file-input" name="cutomfile[]" multiple />
+                    <label class="custom-file-label" for="customfile" data-browse="参照">ファイル選択...</label>
+                </div>
+                <div class="input-group-append">
+                    <button type="button" class="btn btn-outline-secondary reset">取消</button>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-6 border-right">
+                <h5>【項目リスト】</h5>
+                <table class="table table-bordered table-sm border">
+                    <thead>
+                        <tr class="text-center" style="background-color:ghostwhite">
+                            <th data-id="repoNo" class="">No</th>
+                            <th class="">項目名</th>
+                            <th class="">画像識別ID</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-center" style="cursor:pointer">
+                        <tr onclick="">
+                            <td>1</td>
+                            <td>帳票判定</td>
+                            <td>T-01</td>
+                        </tr>
+                        <tr onclick="">
+                            <td>2</td>
+                            <td>受験番号</td>
+                            <td>T-02</td>
+                        </tr>
+                        <tr onclick="">
+                            <td>3</td>
+                            <td>性別</td>
+                            <td>T-03</td>
+                        </tr>
+                        <tr onclick="">
+                            <td>4</td>
+                            <td>受験者氏名</td>
+                            <td>T-04</td>
+                        </tr>
+                        <tr onclick="">
+                            <td>5</td>
+                            <td>1①</td>
+                            <td>1-1</td>
+                        </tr>
+                        <tr onclick="">
+                            <td>6</td>
+                            <td>1②</td>
+                            <td>1-2</td>
+                        </tr>
+                        <tr onclick="">
+                            <td>7</td>
+                            <td>2①ア</td>
+                            <td>2-1-1</td>
+                        </tr>
+                        <tr onclick="">
+                            <td>8</td>
+                            <td>2①イ</td>
+                            <td>2-1-2</td>
+                        </tr>
+                        <tr onclick="">
+                            <td>9</td>
+                            <td>2②</td>
+                            <td>2-2</td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="container-fluid text-nowrap col-6">
+                <form>
+                    <div class="form-group">
+                        <p class="form-inline">
+                            <label class="col-auto" for="inExamId">項目種別：</label>
+                            <select id="inExamId" class="col-auto form-control custom-select">
+                                <option value='' selected></option>
+                                <option value='帳票識別'>帳票識別</option>
+                                <option value='データ項目'>データ項目</option>
+                                <option value='設問'>設問</option>
+                                <option value='選択項目'>マーク項目</option>
+                                <option value='アンケート'>アンケート</option>
+                            </select>
+                        </p>
+                        <p class="form-inline">
+                            <label class="col-auto" for="">問題種別：</label>
+                            <select id="inExamId" class="col-auto form-control custom-select">
+                                <option value='' selected></option>
+                                <option value='帳票識別'>単E</option>
+                                <option value='データ項目'>単M</option>
+                                <option value='設問'>単H</option>
+                            </select>
+                            <select id="inExamId" class="col-auto form-control custom-select">
+                                <option value='' selected></option>
+                                <option value='帳票識別'>正誤・横</option>
+                                <option value='データ項目'>正誤・縦</option>
+                                <option value='設問'>配点入力・横</option>
+                                <option value='設問'>配点入力・縦</option>
+                            </select>
+                        </p>
+                        <p class="form-check form-check-inline">
+                            <label class="col-auto form-check-label" for="">複数採点：</label>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="radio1" id="radio1a" checked>
+                                <label class="form-check-label" for="radio1a">有り</label>
+                                <select id="" class="form-control custom-select">
+                                    <option value='' selected>2</option>
+                                    <option value='帳票識別'>3</option>
+                                    <option value='データ項目'>4</option>
+                                    <option value='設問'>5</option>
+                                </select>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="radio1" id="radio1b">
+                                <label class="form-check-label" for="radio1b">無し</label>
+                            </div>
+                        </p>
+                        <p class="form-inline">
+                            <label class="col-auto" for="bachiCount">
+                                振分けバッチ数：
+                            </label>
+                            <input id="bachiCount" type="text" class="bg-white form-control" />
+                        </p>
+                        <p class="form-inline">
+                            <label class="col-auto" for="bachiCount">
+                                自動振り分けグループ：
+                            </label>
+                            <select id="" class="form-control custom-select">
+                                <option value='' selected></option>
+                                <option value=''>グループ1</option>
+                                <option value=''>グループ2</option>
+                                <option value=''>グループ3</option>
+                            </select>
+                        </p>
+                        <div class="container col-4 mt-5">
+                            <p>
+                                <a id="detailButton" type="button" class="btn form-control btn-outline-success text-center mb-5" asp-area="" asp-controller="FormDefinition" asp-action="Detail" style="display:none">詳　細</a>
+                            </p>
+                            <p>
+                                <button id="scoringOrder" type="button" class="form-control btn-outline-primary" onclick="Regist();">追　加</button>
+                            </p>
+                            <p>
+                                <button id="scoringOrder" type="button" class="form-control btn-outline-primary" onclick="">登　録</button>
+                            </p>
+                            <p>
+                                <button id="scoringOrder" type="button" class="form-control btn-outline-danger" onclick="">削　除</button>
+                            </p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane fade" id="item3" role="tabpanel" aria-labelledby="item3-tab">
+        <h4 class="mt-2">■グループ振り分け数管理</h4>
+        <div class="row">
+            <div class="col-4 border-right">
+                <h5>【項目リスト】</h5>
+                <table class="table table-bordered table-sm border">
+                    <thead>
+                        <tr class="text-center col-12" style="background-color:ghostwhite">
+                            <th style="width:100px">No</th>
+                            <th style="width:300px">項目名</th>
+                            <th style="width:100px">配点</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-center" style="cursor:pointer">
+                        <tr onclick="">
+                            <td>1</td>
+                            <td>1①</td>
+                            <td><input type="text" class="input-group-sm text-center w-100 border-0 p-0 m-0" value="20" /></td>
+                        </tr>
+                        <tr onclick="">
+                            <td>2</td>
+                            <td>1②</td>
+                            <td><input type="text" class="input-group-sm text-center w-100 border-0" value="20" /></td>
+                        </tr>
+                        <tr onclick="">
+                            <td>3</td>
+                            <td>2①ア</td>
+                            <td><input type="text" class="input-group-sm text-center w-100 border-0" value="20" /></td>
+                        </tr>
+                        <tr onclick="">
+                            <td>4</td>
+                            <td>2①イ</td>
+                            <td><input type="text" class="input-group-sm text-center w-100 border-0" value="20" /></td>
+                        </tr>
+                        <tr onclick="">
+                            <td>5</td>
+                            <td>2②</td>
+                            <td><input type="text" class="input-group-sm text-center w-100 border-0" value="20" /></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="container-fluid text-nowrap col-8">
+                <div class="row">
+                    <div class="col-6 border-right">
+                        <h5>■模範解答登録</h5>
+                        <div class="form-group">
+                            <div id="file" class="input-group mr-1 ml-1">
+                                <div class="custom-file">
+                                    <input type="file" id="cutomfile" class="custom-file-input" name="cutomfile[]" multiple />
+                                    <label class="custom-file-label" for="customfile" data-browse="参照">ファイル選択...</label>
+                                </div>
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-outline-secondary reset">取消</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <h5>■ヘルプ情報登録</h5>
+                        <div class="form-group">
+                            <div id="file" class="input-group">
+                                <div class="custom-file">
+                                    <input type="file" id="cutomfile" class="custom-file-input" name="cutomfile[]" multiple />
+                                    <label class="custom-file-label" for="customfile" data-browse="参照">ファイル選択...</label>
+                                </div>
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-outline-secondary reset">取消</button>
+                                </div>
+                            </div>
+                        </div>
+                        <p>
+                            <div class="form-group mr-1">
+                                <label for="commentArea">【ヘルプコメント】</label>
+                                <textarea class="form-control" id="commentArea" rows="3"></textarea>
+                            </div>
+                        </p>
+                    </div>
+                </div>
+                <div class="container col-4 mt-5">
+                    <p>
+                        <button id="scoringOrder" type="button" class="form-control btn-outline-primary" onclick="">登　録</button>
+                    </p>
+                    <p>
+                        <button id="scoringOrder" type="button" class="form-control btn-outline-danger" onclick="">削　除</button>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+
+
+        })
+
+        function FormDetail(repoNo) {
+            $('tbody > tr').css({ 'background-color': '' });
+            $('#' + repoNo).css({ 'background-color': '#c1f5f5' });
+            //var dataArr = $('#' + repoNo)[0].innerText.split('\t');
+            //alert(dataArr[0]);
+            //$('#inFormNo').val(dataArr[0]);
+            ////alert($('#inExamId').val(dataArr[2]).val());
+            //$('#inExamId').val(dataArr[2]);
+            //$('#inExamName').val(dataArr[2]);
+            //$('#inFormName').val(dataArr[2]);
+            //$('#inSubject').val('国語');
+            //$('#inItemCount').val('20');
+            //$('#inTotalScore').val('300');
+            //$('#detailButton').css('display', 'block');
+        }
+    </script>
+}

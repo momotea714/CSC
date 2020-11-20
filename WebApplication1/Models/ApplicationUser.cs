@@ -12,6 +12,10 @@ namespace WebApplication1.Models
         public string DisplayUserName { get; set; }
         public bool IsValid { get; set; }
         public string GroupName { get; set; }
+
+        public DateTime CreateDatetime { get; set; }
+        public DateTime UpdateDatetime { get; set; }
+
         //public int UserGroupId { get; set; }
         public virtual UserGroup UserGroup { get; set; }
 

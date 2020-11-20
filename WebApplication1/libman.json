@@ -5,6 +5,33 @@
     {
       "library": "datatables@1.10.21",
       "destination": "wwwroot/lib/datatables/"
+    },
+    {
+      "library": "handsontable@6.2.0",
+      "destination": "wwwroot/lib/handsontable/"
+    },
+    {
+      "provider": "unpkg",
+      "library": "jquery-datatables-checkboxes@1.2.12",
+      "destination": "wwwroot/lib/jquery-datatables-checkboxes/"
+    },
+    {
+      "library": "awesome-bootstrap-checkbox@1.0.2",
+      "destination": "wwwroot/lib/awesome-bootstrap-checkbox/"
+    },
+    {
+      "library": "font-awesome@5.15.1",
+      "destination": "wwwroot/lib/font-awesome/"
     }
-  ]
+  ,
+{
+  "library": "font-awesome@5.15.1",
+  "destination": "wwwroot/lib/font-awesome/"
+}
+,
+{
+  "library": "font-awesome-animation@0.3.0",
+  "destination": "wwwroot/lib/font-awesome-animation/"
+}
+]
 }

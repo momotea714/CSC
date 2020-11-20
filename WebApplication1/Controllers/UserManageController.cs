@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using CsvHelper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -44,11 +47,50 @@ namespace WebApplication1.Controllers
             _renderService = renderService;
         }
         public IEnumerable<ApplicationUser> applicationUsers { get; set; }
+        public List<SelectListItem> IsValidList = new List<SelectListItem>
+{
+        new SelectListItem { Value = "",Text = ""},
+        new SelectListItem { Value = "表示",Text = "表示"},
+        new SelectListItem { Value = "非表示",Text = "非表示"},
+    };
+        public async Task<IActionResult> Index()
+        {
+            ViewBag.Roles = RoleViewModel.GetSelectList();
+            ViewBag.UserGroups = UserGroupViewModel.GetSelectList();
+            ViewBag.IsValidList = IsValidList;
+            var users = await ApplicationUserViewModel.GetAll(_context, _applicationUser);
 
-        public IActionResult Index()
+            return View(users);
+        }
+
+        public IActionResult BulkRegist()
         {
             return View();
         }
+
+        public IActionResult SikenKanri()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> GetTemplateFile()
+        {
+            // CSV ファイル名
+            string csvFileName = "【アップロード用】ユーザーデータ.csv";
+            // メモリを確保する
+            using (var memory = new MemoryStream())
+            using (var writer = new StreamWriter(memory, Encoding.GetEncoding("shift-jis")))
+            using (var csv = new CsvWriter(writer, new CultureInfo(0x0411, false)))
+            {
+                var applicationUsers = await ApplicationUserViewModel.GetAll(_context, _applicationUser);
+                csv.WriteRecords(applicationUsers);
+                writer.Flush();
+                // CSVファイルとして出力する
+                return File(memory.ToArray(), "text/csv", csvFileName);
+            }
+        }
+
+
 
         public async Task<IActionResult> OnGetViewAllPartial()
         {
@@ -64,6 +106,7 @@ namespace WebApplication1.Controllers
         {
             ViewBag.Roles = RoleViewModel.GetSelectList();
             ViewBag.UserGroups = UserGroupViewModel.GetSelectList();
+            ViewBag.IsValidList = IsValidList;
 
             if (string.IsNullOrEmpty(id))
             {

@@ -11,9 +11,10 @@ namespace WebApplication1.ViewModel
         public static List<SelectListItem> GetSelectList()
         {
             return new List<SelectListItem> {
-            new SelectListItem{ Value = "2c5e174e-3b0e-446f-86af-483d56fd7210",Text = "管理者"},
-            new SelectListItem{ Value = "2c5e174e-3b0e-446f-86af-483d56fd7211",Text = "リーダー"},
-            new SelectListItem{ Value = "2c5e174e-3b0e-446f-86af-483d56fd7212",Text = "一般"},
+            new SelectListItem{ Value = "",Text = ""},
+            new SelectListItem{ Value = "管理者",Text = "管理者"},
+            new SelectListItem{ Value = "リーダー",Text = "リーダー"},
+            new SelectListItem{ Value = "一般",Text = "一般"},
             };
         }
     }

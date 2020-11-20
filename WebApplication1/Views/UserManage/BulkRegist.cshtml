@@ -1,0 +1,410 @@
+﻿@{
+    ViewData["Title"] = "一括登録";
+}
+
+<style>
+    .upload-btn-wrapper {
+        position: relative;
+        overflow: hidden;
+        display: inline-block;
+    }
+
+    .btn_fileupload {
+        border: 2px solid gray;
+        color: gray;
+        background-color: white;
+        padding: 8px 20px;
+        border-radius: 8px;
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .upload-btn-wrapper input[type=file] {
+        font-size: 100px;
+        position: absolute;
+        left: 0;
+        top: 0;
+        opacity: 0;
+    }
+
+    ul.timeline {
+        list-style-type: none;
+        position: relative;
+    }
+
+        ul.timeline:before {
+            content: ' ';
+            background: #d4d9df;
+            display: inline-block;
+            position: absolute;
+            left: 29px;
+            width: 2px;
+            height: 100%;
+            z-index: 400;
+        }
+
+        ul.timeline > li {
+            margin: 20px 0;
+            padding-left: 20px;
+        }
+
+            ul.timeline > li:before {
+                content: ' ';
+                background: white;
+                display: inline-block;
+                position: absolute;
+                border-radius: 50%;
+                border: 3px solid #22c0e8;
+                left: 20px;
+                width: 20px;
+                height: 20px;
+                z-index: 400;
+            }
+
+    .box {
+        position: relative;
+        background: #ffffff;
+        width: 100%;
+    }
+
+    .box-header {
+        color: #444;
+        display: block;
+        padding: 10px;
+        position: relative;
+        border-bottom: 1px solid #f4f4f4;
+        margin-bottom: 10px;
+    }
+
+    .box-tools {
+        position: absolute;
+        right: 10px;
+        top: 5px;
+    }
+
+    .dropzone-wrapper {
+        border: 2px dashed #91b0b3;
+        color: #92b0b3;
+        position: relative;
+        height: 150px;
+    }
+
+    .dropzone-desc {
+        position: absolute;
+        margin: 0 auto;
+        left: 0;
+        right: 0;
+        text-align: center;
+        width: 40%;
+        top: 50px;
+        font-size: 16px;
+    }
+
+    .dropzone,
+    .dropzone:focus {
+        position: absolute;
+        outline: none !important;
+        width: 100%;
+        height: 150px;
+        cursor: pointer;
+        opacity: 0;
+    }
+
+    .dropzone-wrapper:hover,
+    .dropzone-wrapper.dragover {
+        background: #ecf0f5;
+    }
+
+    .preview-zone {
+        text-align: center;
+    }
+
+        .preview-zone .box {
+            box-shadow: none;
+            border-radius: 0;
+            margin-bottom: 0;
+        }
+</style>
+
+<div class="container mt-5 mb-8">
+    <div class="row">
+        <div class="col-md-11 offset-md-1">
+            <h3 class="ml-5">■ユーザー取り込み</h3>
+            <ul class="timeline">
+                <li>
+                    <div class="card box-shadow" style="padding:20px;">
+                        <h4>1. テンプレートファイル取得</h4>
+                        <div class="border-top border mt-2 mb-2"></div>
+                        <p>テンプレートファイルを取得し、テンプレートファイル上に登録したいデータを入力してください。</p>
+                        <p>既存のユーザーデータを修正して取り込みたい場合は、<br>右側の「修正用ファイル取得」ボタンから取得し、データを修正した上でアップロードしてください。</p>
+                        <div class="btn-toolbar">
+                            <div class="btn-group">
+                                <a asp-action="GetTemplateFile" class="btn btn-lg btn-primary"><i class="fas fa-file-download faa-spin animated-hover"></i> テンプレートファイル取得</a>
+                                <a asp-action="GetTemplateFile" class="btn btn-lg btn-primary ml-1"><i class="fas fa-file-download faa-spin animated-hover"></i> 修正用ファイル取得</a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="card box-shadow" style="padding:20px;">
+                        <h4>2. ファイルアップロード</h4>
+                        <div class="border-top border mt-2 mb-2"></div>
+                        <p>入力が完了しましたら、以下のアップロードボタンよりファイルをアップロードしてください。</p>
+                        <p>
+                            新規のユーザーIDをアップロードした場合は、新たにユーザーが作成されます。<br>
+                            既に登録済みのユーザーIDをアップロードした場合は、登録済みユーザーのデータを上書きします。
+                        </p>
+                        <div class="dropzone-wrapper">
+                            <div class="dropzone-desc">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p>csvファイルを選択<br>またはこちらにドラッグしてください</p>
+                            </div>
+                            <input type="file" name="img_logo" class="dropzone">
+                        </div>
+                        <div class="preview-zone hidden">
+                            <div class="box box-solid">
+                                <div class="box-header with-border">
+                                    <div class="box-tools pull-right">
+                                        @*<button type="button" class="btn btn-danger btn-xs remove-preview">
+                                    <i class="fa fa-times"></i> Reset The Field
+                                </button>*@
+                                    </div>
+                                </div>
+                                <div class="box-body"></div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="card box-shadow" style="padding:20px;">
+                        <h4>3. データ修正</h4>
+                        <div class="border-top border mt-2 mb-2"></div>
+                        <p>エラーのある行のデータを修正してください。<br />修正が完了したらチェックボタンを押してください。</p>
+                        <div id="csv"></div>
+                    </div>
+                </li>
+                <li>
+                    <div class="card box-shadow" style="padding:20px;">
+                        <h4>4. 登録</h4>
+                        <div class="border-top border mt-2 mb-2"></div>
+                        <a asp-action="GetTemplateFile" class="btn btn-primary btn-lg">登録</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script src="~/lib/handsontable/handsontable.full.min.js"></script>
+    <script>
+        $(function () {
+            function readFile(input) {
+                var file = input.files[0];
+                if (file) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        var htmlPreview = '<p>' + input.files[0].name + '</p>';
+                        ToTable(reader);
+                        ToDataTable();
+                        var wrapperZone = $(input).parent();
+                        var previewZone = $(input).parent().parent().find('.preview-zone');
+                        var boxZone = $(input).parent().parent().find('.preview-zone').find('.box').find('.box-body');
+                        wrapperZone.removeClass('dragover');
+                        previewZone.removeClass('hidden');
+                        boxZone.empty();
+                        boxZone.append(htmlPreview);
+                    };
+                    // SJIS指定
+                    reader.readAsText(file, 'SJIS');
+                }
+            }
+
+            function reset(e) {
+                e.wrap('<form>').closest('form').get(0).reset();
+                e.unwrap();
+            }
+
+            $(".dropzone").change(function () {
+                readFile(this);
+            });
+
+            $('.dropzone-wrapper').on('dragover', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $(this).addClass('dragover');
+            });
+
+            $('.dropzone-wrapper').on('dragleave', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $(this).removeClass('dragover');
+            });
+
+            $('.remove-preview').on('click', function () {
+                var boxZone = $(this).parents('.preview-zone').find('.box-body');
+                var previewZone = $(this).parents('.preview-zone');
+                var dropzone = $(this).parents('.form-group').find('.dropzone');
+                boxZone.empty();
+                previewZone.addClass('hidden');
+                reset(dropzone);
+            });
+
+            var table = null;
+            function ToDataTable() {
+                table = $("#import_table").DataTable({
+                    "keys": true,
+                    "drawCallback": function (settings) {
+                        console.log('DataTables has redrawn the table');
+                    },
+                    oLanguage: {
+                        /* 日本語化設定 */
+                        sLengthMenu: "表示　_MENU_　件", // 表示行数欄(例 = 表示 10 件)
+                        oPaginate: { // ページネーション欄
+                            sNext: "次へ",
+                            sPrevious: "前へ"
+                        },
+                        sInfo: "_TOTAL_ 件中 _START_件から_END_件 を表示しています", // 現在の表示欄(例 = 100 件中 20件から30件 を表示しています)
+                        sSearch: "検索 ", // 検索欄(例 = 検索 --)
+                        sZeroRecords: "表示するデータがありません", // 表示する行がない場合
+                        sInfoEmpty: "0 件中 0件 を表示しています", // 行が表示されていない場合
+                        sInfoFiltered: "全 _MAX_ 件から絞り込み" // 検索後に総件数を表示する場合
+                    }
+                });
+            }
+
+            $('body').on('dblclick', 'td:not(:has(button))', function () {
+                $(this).attr('contenteditable', 'true');
+                var el = $(this);
+                var range = document.createRange();
+                var sel = window.getSelection();
+                if (el[0].childNodes.length > 0) {
+                    range.setStart(el[0].childNodes[0], 0);
+                    range.collapse(true);
+                    sel.removeAllRanges();
+                    sel.addRange(range);
+                }
+                el.focus();
+                $(this).blur(endEdition);
+            });
+
+            function endEdition() {
+                var el = $(this);
+                table.cell(el).invalidate().draw();
+                el.attr('contenteditable', 'false');
+                el.off('blur', endEdition); // To prevent another bind to this function
+            }
+
+            function ToTable(reader) {
+                var contents = reader.result;
+                // 改行で分割
+                lf = contents.split("\r\n");
+                var pre_num = 0;
+                var pre_line = '';
+                var sum_num = 0;
+                var lines = [];
+                var i = 0;
+
+                $.each(lf, function (lfKey, lfVal) {
+                    // 改行毎のダブルクオート数
+                    sum_num = lfVal.split('"').length - 1 + pre_num;
+                    if (pre_line == '') {
+                        multi_line = lfVal;
+                    } else {
+                        // 改行で前行と結合
+                        multi_line = pre_line + "\r\n" + lfVal;
+                    }
+                    if (sum_num % 2 == 0) {
+                        // ダブルクオートが偶数
+                        lines[i] = multi_line;
+                        pre_num = 0;
+                        pre_line = '';
+                        i++;
+                    } else {
+                        // ダブルクオートが奇数
+                        pre_num = sum_num;
+                        pre_line = multi_line;
+                    }
+                });
+
+                if (lines.length > 0) {
+                    var data = [];
+                    $.each(lines, function (linesKey, linesVal) {
+                        linesVal = $.trim(linesVal.replace(/(^[\s]+|[\s]+$)/g, ''));
+                        // 空行は除外
+                        if (linesVal !== '') {
+                            // カンマで分割
+                            var cell = linesVal.split(',');
+                            var pre_num = 0;
+                            var pre_data = '';
+                            var arr = [];
+                            var j = 0;
+                            $.each(cell, function (cellKey, cellVal) {
+                                // カンマ毎のダブルクオート数
+                                if (pre_data == '') {
+                                    multi_data = cellVal;
+                                } else {
+                                    // カンマで前セルと結合
+                                    multi_data = pre_data + "," + cellVal;
+                                }
+                                if (sum_num % 2 == 0) {
+                                    // ダブルクオートが偶数
+                                    // セル前後のダブルクオートを削除
+                                    multi_data = $.trim(multi_data.replace(/(^"+|"+$)/g, ''));
+                                    // セル内の""を"へ置換
+                                    multi_data = multi_data.replace(/""/g, '"');
+                                    arr[j] = multi_data;
+                                    pre_num = 0;
+                                    pre_data = '';
+                                    j++;
+                                } else {
+                                    // ダブルクオートが奇数
+                                    pre_num = sum_num;
+                                    pre_data = multi_data;
+                                }
+                            });
+                            data[linesKey] = arr;
+                        }
+                    });
+                }
+
+                // table生成
+                $('#csv').html("<table id='import_table' class='table table-bordered table-striped'><thead></thead><tbody style='cursor: pointer'></tbody></table>");
+                $.each(data, function (dataKey, dataVal) {
+                    if (dataKey == 0) {
+                        $('thead').append('<tr id="row' + dataKey + '"  class="text-center" style="background-color:ghostwhite"></tr>');
+                        $('tr[id=row' + dataKey + ']').append('<th>エラー内容</th>');
+                        $.each(dataVal, function (data2Key, data2Val) {
+                            // セル内改行を<br>へ
+                            data2Val = data2Val.replace(/(\r\n|\n)/g, '<br>');
+                            $('tr[id=row' + dataKey + ']').append('<th>' + data2Val + '</th>');
+                        });
+                    }
+                    else {
+                        if (dataKey == 3) {
+                            $('tbody').append('<tr id="row' + dataKey + '" class="text-center" style="background-color:pink;"></tr>');
+                            $('tr[id=row' + dataKey + ']').append('<td>グループが存在しません</td>');
+                        }
+                        else {
+                            $('tbody').append('<tr id="row' + dataKey + '" class="text-center"></tr>');
+                            $('tr[id=row' + dataKey + ']').append('<td></td>');
+                        }
+                        $.each(dataVal, function (data2Key, data2Val) {
+                            // セル内改行を<br>へ
+                            data2Val = data2Val.replace(/(\r\n|\n)/g, '<br>');
+                            $('tr[id=row' + dataKey + ']').append('<td>' + data2Val + '</td>');
+                        });
+                    }
+
+                });
+            }
+
+            function csvToArray(csv) {
+                return csv.split('\n').map(function (x) {
+                    return x.split(',');
+                })
+            };
+        });
+    </script>
+}

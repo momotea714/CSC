@@ -49,21 +49,21 @@ namespace WebApplication1.Data.Migrations
                         new
                         {
                             Id = "2c5e174e-3b0e-446f-86af-483d56fd7210",
-                            ConcurrencyStamp = "a8259bbc-fbec-42c6-9471-a54aff220796",
+                            ConcurrencyStamp = "f946ed85-5a36-4161-aba0-ca1ebe2bc329",
                             Name = "Administrator",
                             NormalizedName = "管理者"
                         },
                         new
                         {
                             Id = "2c5e174e-3b0e-446f-86af-483d56fd7211",
-                            ConcurrencyStamp = "ff89e7df-1132-45ba-9843-c169859a0447",
+                            ConcurrencyStamp = "2010909d-d31d-4f14-ab9b-686691587928",
                             Name = "Leader",
                             NormalizedName = "リーダー"
                         },
                         new
                         {
                             Id = "2c5e174e-3b0e-446f-86af-483d56fd7212",
-                            ConcurrencyStamp = "fc522e20-329a-4a61-8ebe-1f4d55360d8c",
+                            ConcurrencyStamp = "708acd01-37f7-437d-8f62-e82908eeeedc",
                             Name = "Normal",
                             NormalizedName = "一般"
                         });
@@ -206,6 +206,9 @@ namespace WebApplication1.Data.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("CreateDatetime")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("DisplayUserName")
                         .HasColumnType("nvarchar(max)");
 
@@ -254,6 +257,9 @@ namespace WebApplication1.Data.Migrations
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
+                    b.Property<DateTime>("UpdateDatetime")
+                        .HasColumnType("datetime2");
+
                     b.Property<int?>("UserGroupId")
                         .HasColumnType("int");
 
@@ -280,51 +286,57 @@ namespace WebApplication1.Data.Migrations
                         {
                             Id = "8e445865-a24d-4543-a6c6-9443d048cdb9",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "96c52d22-01fe-4f04-bf8b-795c9488f534",
+                            ConcurrencyStamp = "c43ad297-b8a8-4329-9fee-1d9792c778ae",
+                            CreateDatetime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DisplayUserName = "管理者user1",
                             EmailConfirmed = false,
                             IsValid = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "user1",
                             Password = "P@ssw0rd",
-                            PasswordHash = "AQAAAAEAACcQAAAAEGRxVJfGS74ry/onD25LC9v7RxNmsBgAzZOr1tNf+daAnaR3cmBx6VV5jmg2xR3MWg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAECSbsmEsn9qna8aZAsz1UqGGlZhTtf6WcOl9fKUv6HeJxZBv1U2oa3qT8xpDhPWZoQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "0268e34d-b830-45eb-9407-cf5b3224b47d",
+                            SecurityStamp = "8f1731cd-7d67-4975-a969-014920827649",
                             TwoFactorEnabled = false,
+                            UpdateDatetime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserName = "user1"
                         },
                         new
                         {
                             Id = "8e445865-a24d-4543-a6c6-9443d048cdb8",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "cb685b0e-76ed-4a7e-9ad0-800ce8ba7c33",
+                            ConcurrencyStamp = "4e05f03b-ba56-420e-babc-e27f9b927bac",
+                            CreateDatetime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DisplayUserName = "リーダーuser2",
                             EmailConfirmed = false,
                             IsValid = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "user2",
                             Password = "P@ssw0rd",
-                            PasswordHash = "AQAAAAEAACcQAAAAEDqCVlSDzoWb2HOnHSgdVfPJEPBiwmui4IKX+Zgy9lKr2bdr/NYgPpl6petmjLwi0Q==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEPc1XnJiFImDBJp7NzouziaOimIAkbVrSDDm3Zv2Urfoxa9S2YzqoFaoLdyqQqkQZg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "de354ee7-b0e9-4fa6-a99d-f5e0a8a43f68",
+                            SecurityStamp = "25694332-f358-48a7-b85e-82832ae47281",
                             TwoFactorEnabled = false,
+                            UpdateDatetime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserName = "user2"
                         },
                         new
                         {
                             Id = "8e445865-a24d-4543-a6c6-9443d048cdb7",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "407d9aa0-ff32-4faa-87b5-6ba58c972d18",
+                            ConcurrencyStamp = "ed50a6f4-6098-4c5f-b10c-b91845b83943",
+                            CreateDatetime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DisplayUserName = "一般user3",
                             EmailConfirmed = false,
                             IsValid = false,
                             LockoutEnabled = false,
                             NormalizedUserName = "user3",
                             Password = "P@ssw0rd",
-                            PasswordHash = "AQAAAAEAACcQAAAAEMi7hJFcN9838JQUd+Ev2tJFhK9wg4zZQymDX+pBP/hbcuvqlirmbwE0WDTGnAjZmg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEGzD5QGOYgPMt/QEEU9NBjKh16K6JbJpqlSHz1t1MGB/p8Z6KcnipG9lX+XX7Xjv6g==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "158bddc7-60ea-4513-b096-b4db28b56482",
+                            SecurityStamp = "681bfef6-9745-4ad0-95f3-459842b5814e",
                             TwoFactorEnabled = false,
+                            UpdateDatetime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserName = "user3"
                         });
                 });

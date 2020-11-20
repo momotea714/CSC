@@ -1,0 +1,270 @@
+
+@{
+    ViewData["Title"] = "試験管理";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/lib/datatables/css/dataTables.bootstrap4.min.css" />
+<h3>■試験管理</h3>
+@*<div class="container-fluid">
+        <div class="row">
+            <div class="input-group justify-content-end">
+                <input type="button" class="col btn btn-primary mr-2" value="イメージ登録" onmouseover="HelpTextChange('試験の画像を登録・設定します');" onmouseout="HelpTextChange('ヘルプテキスト');" />
+                <input type="button" class="col btn btn-primary mr-2" value="項目登録" />
+                <input type="button" class="col btn btn-primary " value="解答・配点登録" />
+            </div>
+        </div>
+    </div>*@
+<div class="container-fluid border mt-2" style="background-color:ghostwhite">
+    <h5>■表示条件変更</h5>
+    <form class="mt-2">
+        <div class="row text-nowrap">
+            <div class="ml-2">
+                <label for="formNo" class="">
+                    【試験ID】
+                </label>
+                <input id="examId" type="text" class="bg-white form-control" style="max-width:100px" />
+            </div>
+            <div class="ml-2">
+                <label for="examName">
+                    【試験名】
+                </label>
+                <input id="examName" type="text" class="bg-white form-control" style="min-width:300px" />
+            </div>
+            <div class="ml-2">
+                <label for="examStart">
+                    【試験開始日】
+                </label>
+                <input id="examStart" type="date" class="col-12 bg-white form-control" style="max-width:200px" />
+            </div>
+            <div class="ml-2">
+                <label for="examEnd">
+                    【試験終了日】
+                </label>
+                <input id="examEnd" type="date" class="bg-white form-control" style="max-width:200px" />
+            </div>
+            <div class="ml-2">
+                <label for="scoringStart">
+                    【採点開始日】
+                </label>
+                <input id="scoringStart" type="date" class="bg-white form-control" style="max-width:200px" />
+            </div>
+            <div class="ml-2">
+                <label for="scoringEnd">
+                    【採点終了日】
+                </label>
+                <input id="scoringEnd" type="date" class="bg-white form-control" style="max-width: 200px" />
+            </div>
+            <div class="ml-2">
+                <label for="examPlanPeople">
+                    【受験予定者数】
+                </label>
+                <input id="examPlanPeople" type="text" class="bg-white form-control" style="max-width:150px" />
+            </div>
+            <div class="ml-2">
+                <label for="examPlanPeople">
+                    【表示/非表示】
+                </label>
+                <select id="examPlanPeople" class="form-control" style="max-width:150px" onclick="">
+                    <option value='' selected></option>
+                    <option value=''>表示</option>
+                    <option value=''>非表示</option>
+                </select>
+            </div>
+            <div class="text-center mt-3 mb-4 ml-4">
+                <button type="submit" class="btn-lg form-control btn-outline-primary">表示切替</button>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="border-top border mt-2 mb-2"></div>
+<h5 class="ml-1">■試験データ一覧</h5>
+<div class="row">
+    <div class="col-10 justify-content-between text-nowrap">
+        <div class="container-fluid mt-4">
+            <table id="examTable" class="table table-bordered table-striped">
+                <thead>
+                    <tr class="text-center" style="background-color:ghostwhite">
+                        <th data-id="repoNo" class="">試験ID</th>
+                        <th class="">試験名</th>
+                        <th class="">試験開始日</th>
+                        <th class="">試験終了日</th>
+                        <th class="">採点開始日</th>
+                        <th class="">採点終了日</th>
+                        <th class="">受験予定者数</th>
+                        <th class="">表示/非表示</th>
+                        <th class="">データ更新時間</th>
+                    </tr>
+                </thead>
+                <tbody style="cursor:pointer">
+                    @for (var count = 1; count <= 20; count++)
+                    {
+                        <tr class="text-center" id=@("repoTable" + (1000 + count)) onclick="FormDetail('repoTable' + @(1000 + count));">
+                            <td>@count.ToString("D5")</td>
+                            <td>@("2020年度入学試験" +count)</td>
+                            <td>@DateTime.Now.AddDays(1).ToString("yyyy/MM/dd")</td>
+                            <td>@DateTime.Now.AddDays(2).ToString("yyyy/MM/dd")</td>
+                            <td>@DateTime.Now.AddDays(3).ToString("yyyy/MM/dd")</td>
+                            <td>@DateTime.Now.AddDays(4).ToString("yyyy/MM/dd")</td>
+                            <td>1500</td>
+                            <td>表示</td>
+                            <td>@DateTime.Now.ToString()</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-2 shadow" style="background-color:aliceblue">
+        <div class="container-fluid text-nowrap">
+            <form class="mt-2">
+                <div class="text-nowrap">
+                    <div class="ml-2">
+                        <label for="formNo" class="">
+                            【試験ID】
+                        </label>
+                        <input id="examId" type="text" class="form-control" readonly />
+                    </div>
+                    <div class="ml-2">
+                        <label for="examName">
+                            【試験名】
+                        </label>
+                        <input id="examName" type="text" class="col-12 bg-white form-control" />
+                    </div>
+                    <div class="ml-2">
+                        <label for="examStart">
+                            【試験開始日】
+                        </label>
+                        <input id="examStart" type="date" class="col-12 bg-white form-control" />
+                    </div>
+                    <div class="ml-2">
+                        <label for="examEnd">
+                            【試験終了日】
+                        </label>
+                        <input id="examEnd" type="date" class="bg-white form-control" />
+                    </div>
+                    <div class="ml-2">
+                        <label for="scoringStart">
+                            【採点開始日】
+                        </label>
+                        <input id="scoringStart" type="date" class="bg-white form-control" />
+                    </div>
+                    <div class="ml-2">
+                        <label for="scoringEnd">
+                            【採点終了日】
+                        </label>
+                        <input id="scoringEnd" type="date" class="bg-white form-control" />
+                    </div>
+                    <div class="ml-2">
+                        <label for="examPlanPeople">
+                            【受験予定者数】
+                        </label>
+                        <input id="examPlanPeople" type="text" class="bg-white form-control" />
+                    </div>
+                    <div class="ml-2">
+                        <label for="examPlanPeople">
+                            【表示/非表示】
+                        </label>
+                        <input id="examPlanPeople" type="text" class="bg-white form-control" />
+                    </div>
+                    <div class="container mt-5">
+                        <p>
+                            <button id="scoringOrder" type="button" class="form-control btn-outline-primary" onclick="">新規登録</button>
+                        </p>
+                        <p>
+                            <button id="scoringOrder" type="button" class="form-control btn-outline-primary" onclick="Regist();">登　録</button>
+                        </p>
+                        <p>
+                            <button id="scoringOrder" type="button" class="form-control btn-outline-danger" onclick="">削　除</button>
+                        </p>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/lib/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="~/lib/datatables/js/dataTables.bootstrap4.min.js"></script>
+    <script>
+        $(function () {
+            // datatableの設定を変更
+            $("#examTable").DataTable({
+                oLanguage: {
+                    /* 日本語化設定 */
+                    sLengthMenu: "表示　_MENU_　件", // 表示行数欄(例 = 表示 10 件)
+                    oPaginate: { // ページネーション欄
+                        sNext: "次へ",
+                        sPrevious: "前へ"
+                    },
+                    sInfo: "_TOTAL_ 件中 _START_件から_END_件 を表示しています", // 現在の表示欄(例 = 100 件中 20件から30件 を表示しています)
+                    sSearch: "検索 ", // 検索欄(例 = 検索 --)
+                    sZeroRecords: "表示するデータがありません", // 表示する行がない場合
+                    sInfoEmpty: "0 件中 0件 を表示しています", // 行が表示されていない場合
+                    sInfoFiltered: "全 _MAX_ 件から絞り込み" // 検索後に総件数を表示する場合
+                },
+                // 件数切替機能 無効
+                lengthChange: true,
+                // 検索機能 無効
+                searching: true,
+                // ソート機能 無効
+                ordering: true,
+                // 情報表示 無効
+                info: true,
+                // ページング機能 無効
+                paging: true,
+                // 初期表示時には並び替えをしない
+                order: [],
+                //columnDefs: [
+                //    { targets: 1, width: 100 }
+                //],
+                // 状態を保存する機能をつける
+                stateSave: true,
+                //scrollX: true,
+            });
+        });
+        window.onload = function () {
+            $('#inExamId').change(examIdChange);
+            $('#repoTable').on('page.dt', function () {
+                PageRefresh();
+            });
+        };
+
+        function FormDetail(repoNo) {
+            PageRefresh();
+            $('#' + repoNo).css({ 'background-color': 'cyan' });
+            var dataArr = $('#' + repoNo)[0].innerText.split('\t');
+            //alert(dataArr[0]);
+            $('#inFormNo').val(dataArr[0]);
+            //alert($('#inExamId').val(dataArr[2]).val());
+            $('#inExamId').val(dataArr[2]);
+            $('#inExamName').val(dataArr[2]);
+            $('#inFormName').val(dataArr[2]);
+            $('#inSubject').val('国語');
+            $('#inItemCount').val('20');
+            $('#inTotalScore').val('300');
+            $('#detailButton').css('display', 'block');
+        }
+        function examIdChange() {
+            $('#inExamName').val($('#inExamId').val());
+        };
+
+        function PageRefresh() {
+            $('tbody > tr').css({ 'background-color': '' });
+            $('#inFormNo').val('');
+            $('#inExamId').val('');
+            $('#inExamName').val('');
+            $('#inFormName').val('');
+            $('#inSubject').val('');
+            $('#inItemCount').val('');
+            $('#inTotalScore').val('');
+            $('#detailButton').css('display', 'none');
+        };
+
+        function Regist() {
+
+        };
+    </script>
+}
+

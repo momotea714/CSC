@@ -1,0 +1,366 @@
+﻿
+@{
+    ViewData["Title"] = "データ登録";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    #drop_zone {
+        width: 100%;
+        height: 150px;
+        border: 4px dashed green;
+        border-radius: 2rem;
+        margin: auto;
+        margin-top: 2rem;
+        font-size: 2rem;
+        color: darkgray;
+        text-align: center;
+        align-items: center;
+    }
+</style>
+
+<h3>■データ登録</h3>
+<hr />
+<div class="container">
+    <h4 class="border-bottom">１.試験の選択</h4>
+    <form>
+        <p class="form-inline">
+            <label class="col-auto" for="inExamId">試験ID：</label>
+            <select id="inExamId" class="col-auto form-control custom-select">
+                <option value='' selected></option>
+                <option value='2020年度入学試験'>20-1009-1</option>
+                <option value='2021年度入学試験'>21-1009-2</option>
+                <option value='2022年度入学試験'>22-1009-3</option>
+                <option value='2023年度入学試験'>23-1009-4</option>
+                <option value='2024年度入学試験'>24-1009-5</option>
+            </select>
+            <select id="inExamId" class="col-8 form-control custom-select">
+                <option value='' selected></option>
+                <option value='2020年度入学試験'>2020年度入学試験</option>
+                <option value='2021年度入学試験'>2021年度入学試験</option>
+                <option value='2022年度入学試験'>2022年度入学試験</option>
+                <option value='2023年度入学試験'>2023年度入学試験</option>
+                <option value='2024年度入学試験'>2024年度入学試験</option>
+            </select>
+        </p>
+        <p class="text-center">
+            <input type="button" class="btn btn-lg btn-outline-success" onclick="ShowStep2();" value="次へ" />
+        </p>
+    </form>
+</div>
+<div id="step2" class="container mt-5" style="display:none">
+    <h4 class="border-bottom">2.ファイルアップロード</h4>
+    <form method="post" enctype="multipart/form-data" asp-controller="DataRegist" asp-action="FileUpload">
+        <div class="form-group">
+            <div id="drop_zone"><p>対象試験のヘッダーファイルをアップロードしてください</p>（ドラッグ＆ドロップでファイルをここに置いてください）</div>
+            <output id="list"></output>
+            <input type="file" class="form-control" name="files" webkitdirectory />
+            <div class="col-md-2">
+                <input type="submit" value="Upload" />
+            </div>
+
+            @*<button type="button" onclick="file_upload()">アップロード</button>*@
+            @*<div id="file" class="input-group mr-1 ml-1">
+            <div class="custom-file">
+                <input type="file" id="cutomfile" class="custom-file-input" name="files" multiple />
+                <label class="custom-file-label" for="customfile" data-browse="参照">ファイル選択...</label>
+            </div>
+            <div class="input-group-append">
+                <button type="button" class="btn btn-outline-secondary reset">取消</button>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <input type="submit" value="Upload" />
+        </div>*@
+            @*<div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="progress mt-3 fade" id="progress">
+                        <div class="progress-bar" role="progressbar"
+                             style="width: 0;" data-valuenow="0" data-valuemin="0" data-valuemax="100">
+                            0%
+                        </div>
+                    </div>
+                    <div class="mt-3 text-center">
+                        <button type="button" class="btn btn-outline-primary" id="btn">実行</button>
+                    </div>
+                </div>
+            </div>
+        </div>*@
+            <p class="text-center">
+                <input type="button" class="btn btn-lg btn-outline-success" onclick="" id="btn" value="アップロード" />
+            </p>
+            <div class="progress mt-3 fade" id="progress">
+                <div class="progress-bar" role="progressbar"
+                     style="width: 0;" data-valuenow="0" data-valuemin="0" data-valuemax="100">
+                    0%
+                </div>
+            </div>
+            <p class="text-center mt-2">
+                <input type="button" id="btnStep2" class="btn btn-lg btn-outline-success" onclick="ShowStep3();" value="次へ" style="display:none" />
+            </p>
+        </div>
+    </form>
+</div>
+<div id="step3" class="container mt-5" style="display:none">
+    <h4 class="border-bottom">3.枚数チェック</h4>
+    <form>
+        <p>アップロードされたファイル情報の整合性確認を行います。</p>
+        <p class="text-center">
+            <input type="button" class="btn btn-lg btn-outline-success" onclick="ShowStep4();" value="確認" />
+        </p>
+    </form>
+</div>
+<div id="step4" class="container mt-5" style="display:none">
+    <h4 class="border-bottom">4.自動振り分け</h4>
+    <form class="justify-content-center">
+        <h5 class="text-center">自動振り分けを行いますか？</h5>
+            <p class="text-center">
+                <input type="button" class="btn btn-lg btn-outline-success" id="btn2" value="実行" />
+                <input type="button" class="btn btn-lg btn-outline-success ml-3" onclick="ShowStep5();" value="実行せずに次へ" />
+            </p>
+            <div class="progress mt-3 fade" id="progress2">
+                <div class="progress-bar" role="progressbar"
+                     style="width: 0;" data-valuenow="0" data-valuemin="0" data-valuemax="100">
+                    0%
+                </div>
+            </div>
+    </form>
+</div>
+<div id="step5" class="container mt-5" style="display:none">
+    <h4 class="border-bottom">5.登録完了</h4>
+    <h5 class="text-center">データ登録が完了しました！</h5>
+    <p class="text-center">
+        <a type="button" class="btn btn-lg btn-outline-success" asp-controller="Menu" asp-action="Index">戻る</a>
+    </p>
+</div>
+
+@*<form method="post" enctype="multipart/form-data" asp-controller="DataRegist" asp-action="FileUpload">
+        <div class="form-group">
+            <div class="col-md-4">
+                <p>ファイルアップロード</p>
+                <input type="file" name="files" multiple />
+            </div>
+            <div class="col-md-2">
+                <input type="submit" value="Upload" />
+            </div>
+        </div>
+    </form>*@
+
+@if (ViewData["uploadResult"] != null)
+{
+    <hr>
+    <h5>ファイルアップロード結果　：　@ViewData["uploadResult"]</h5>
+}
+<hr>
+@section Scripts{
+    <script>
+        /**
+         * プログレスバー
+         */
+        const progressBar = function (id) {
+            const frame = $(id);
+            const bar = $('div.progress-bar', frame);
+            let current = 0;
+            return {
+                current: function () {
+                    return current;
+                },
+                set: function (n) {
+                    current = (n > 100) ? 100 : n;
+                    bar
+                        .css('width', current + '%')
+                        .prop('aria-valuenow', current)
+                        .text(current + '%');
+                    return this;
+                },
+                show: function () {
+                    this.set(0);
+                    frame.addClass('show');
+                    bar.addClass('progress-bar-striped progress-bar-animated');
+                    return this;
+                },
+                complete: function () {
+                    bar.removeClass('progress-bar-striped progress-bar-animated');
+                    sleep(500);
+                    $('#btnStep2').css('display', '');
+                    return this;
+                },
+                show2: function () {
+                    this.set(0);
+                    frame.addClass('show');
+                    bar.addClass('progress-bar-striped progress-bar-animated');
+                    return this;
+                },
+                complete2: function () {
+                    bar.removeClass('progress-bar-striped progress-bar-animated');
+                    sleep(500);
+                    $('#step5').css('display', '');
+                    return this;
+                }
+            };
+        };
+        (function ($) {
+            const progress = new progressBar('#progress');
+            const btn = $('#btn');
+
+            btn.on('click', function () {
+                progress.show();
+                btn.prop("disabled", true);
+
+                // 進行状況チェック (チェック間隔は任意...)
+                const timer = setInterval(function () {
+                    const current = progress.current();
+                    if (current < 100) {
+                        // バーを進める ※サンプル：0〜10の乱数を加算する
+                        const n = Math.floor(Math.random() * 11);
+                        progress.set(current + n);
+                    } else {
+                        // 100%になれば、チェック(繰り返し)を終了する
+                        progress.complete();
+                        clearInterval(timer);
+
+                        btn.text('終了')
+                            .addClass('btn-outline-success')
+                            .removeClass('btn-outline-primary');
+                    }
+                }, 200);
+            });
+        })(jQuery);
+        (function ($) {
+            const progress = new progressBar('#progress2');
+            const btn = $('#btn2');
+
+            btn.on('click', function () {
+                progress.show2();
+                btn.prop("disabled", true);
+
+                // 進行状況チェック (チェック間隔は任意...)
+                const timer = setInterval(function () {
+                    const current = progress.current();
+                    if (current < 100) {
+                        // バーを進める ※サンプル：0〜10の乱数を加算する
+                        const n = Math.floor(Math.random() * 11);
+                        progress.set(current + n);
+                    } else {
+                        // 100%になれば、チェック(繰り返し)を終了する
+                        progress.complete2();
+                        clearInterval(timer);
+
+                        btn.text('終了')
+                            .addClass('btn-outline-success')
+                            .removeClass('btn-outline-primary');
+                    }
+                }, 200);
+            });
+        })(jQuery);
+
+        function sleep(waitMsec) {
+            var startMsec = new Date();
+
+            // 指定ミリ秒間だけループさせる（CPUは常にビジー状態）
+            while (new Date() - startMsec < waitMsec);
+        }
+        function ShowStep2() {
+            $('#step2').css('display', '');
+        }
+        function Upload() {
+            for (var i = 0; i <= 100; i += 5) {
+                sleep(300);
+                $('#uploadProgress').css('width', '50%');
+            }
+            $('#btnStep2').css('display', '');
+        }
+        function ShowStep3() {
+            $('#step3').css('display', '');
+        }
+        function ShowStep4() {
+            $('#step4').css('display', '');
+        }
+        function ShowStep5() {
+            $('#step5').css('display', '');
+        }
+
+        //drop zoneの実装
+        function handleFileSelect(evt) {
+            evt.stopPropagation();
+            evt.preventDefault();
+            files = evt.dataTransfer.files; // FileList object.
+            alert(files);
+
+            // 以下に必要なFile Objectのプロパティを記述
+            var output = [];
+            for (var i = 0, f; f = files[i]; i++) {
+                output.push('<li><strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ',
+                    f.size, ' bytes, last modified: ',
+                    f.lastModifiedDate.toLocaleDateString(), '</li>');
+            }
+
+            // ディレクトリパターン
+            //for (let i = 0; i < evt.target.files.length; i++) {
+
+            //    let file = evt.target.files[i];
+
+            //    // ディレクトリの相対パス
+            //    let relativePath = file.webkitRelativePath;
+
+            //    // ここではテキストファイルとして読み出してみる.
+            //    let fileReader = new FileReader();
+            //    fileReader.onload = event => {
+
+            //        // 内容を取得する.
+            //        let text = event.target.result;
+            //        alert(relativePath);
+            //        // 表示してみる.
+            //        //console.log(relativePath, text);
+            //        output.push('<li><strong>', relativePath, '</strong> ',
+            //            text,  '</li>');
+            //    }
+            //    fileReader.readAsText(file);
+            //}
+
+            document.getElementById('list').innerHTML = '<ul>' + output.join('') + '</ul>';
+        }
+
+        function handleDragOver(evt) {
+            evt.stopPropagation();
+            evt.preventDefault();
+            evt.dataTransfer.dropEffect = 'copy';
+        }
+
+        // イベントリスナーを設定
+        var dropZone = document.getElementById('drop_zone');
+        dropZone.addEventListener('dragover', handleDragOver, false);
+        dropZone.addEventListener('drop', handleFileSelect, false);
+        function file_upload() {
+            // フォームデータを取得
+            let formdata = () => new FormData($('#my_form').get(0));
+            // ファイルが未登録なら一番最初のファイルを追加
+            // 複数ファイルアップロードの場合ここを修正
+            if ($('input[name="upload_file"]').val() == "") {
+                formdata.append('upload_file', files[0])
+            }
+
+            //非同期通信
+            $.ajax({
+                url: "/upload",
+                type: "POST",
+                data: formdata,
+                cache: false,
+                contentType: false,
+                processData: false,
+                dataType: 'html',
+            })
+                .done(function (data, textStatus, jqXHR) {
+                    console.log(data);
+                })
+                .fail(function (jqXHR, textStatus, errorThrown) {
+                    console.log("fail");
+                })
+                .always(function (data) {
+                    console.log("complete")
+                });
+        }
+    </script>
+}
+
+
