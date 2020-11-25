@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "グループ振り分け";
+    ViewData["Title"] = "採点者振り分け";
 
     //var tests = new
     var mondaishubetu = new List<dynamic>
@@ -21,151 +21,352 @@
     div.btnRight {
         text-align: right;
     }
+
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    /* Firefox */
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+
+    .scrollTable tbody, .scrollTable thead {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+    }
+
+    .scrollTable tr {
+        -ms-flex-preferred-size: 100%;
+        flex-basis: 100%;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+    }
+
+    .scrollTable th, .scrollTable td {
+        -webkit-box-flex: 1;
+        -ms-flex: 1;
+        flex: 1;
+        /*text-align: center;*/
+    }
+
+    .scrollTable tbody {
+        max-height: 500px;
+        overflow-y: auto;
+    }
+
+    /* width */
+    .scrollTable ::-webkit-scrollbar {
+        width: 2px;
+    }
+
+    /* Track */
+    .scrollTable ::-webkit-scrollbar-track {
+        box-shadow: inset 0 0 5px grey;
+        border-radius: 10px;
+    }
+
+    /* Handle */
+    .scrollTable ::-webkit-scrollbar-thumb {
+        background: blue;
+        border-radius: 10px;
+    }
+
+    table.table-hover tbody tr td:hover {
+        background-color: azure;
+    }
 </style>
-<h3>■採点者振り分け</h3>
-<div class="container-fluid border mt-2" style="background-color:ghostwhite">
-    <h5>■試験選択</h5>
-    <div class="mt-2 mb-2">
-        <div class="form-inline">
-            <label class="col-auto" for="inExamId">試験ID：</label>
-            <select id="inExamId1" class="col-auto form-control custom-select" style="min-width:200px;">
-                <option value='' selected></option>
-                <option value='2020年度入学試験'>20-1009-1</option>
-                <option value='2021年度入学試験'>21-1009-2</option>
-                <option value='2022年度入学試験'>22-1009-3</option>
-                <option value='2023年度入学試験'>23-1009-4</option>
-                <option value='2024年度入学試験'>24-1009-5</option>
-            </select>
-            <select id="inExamId2" class="col-auto form-control custom-select" style="min-width:400px;">
-                <option value='' selected></option>
-                <option value='2020年度入学試験'>2020年度入学試験</option>
-                <option value='2021年度入学試験'>2021年度入学試験</option>
-                <option value='2022年度入学試験'>2022年度入学試験</option>
-                <option value='2023年度入学試験'>2023年度入学試験</option>
-                <option value='2024年度入学試験'>2024年度入学試験</option>
-            </select>
-            <span class="ml-4">
-                <b>
-                    受験者数：1200人　バッチ数：190　設問数：172
-                </b>
-            </span>
-        </div>
-    </div>
-</div>
+
 <ul class="nav nav-pills shadow nav-fill flex-column flex-lg-row text-lg-center mt-2" style="font-size:20px" role="tablist">
     <li class="nav-item ">
-        <a class="nav-link border active" id="item1-tab" data-toggle="tab" href="#item1" role="tab" aria-controls="item1" aria-selected="true">
-            振り分け
+        <a class="nav-link border active" id="item1-tab" data-toggle="tab" href="#Huriwake" role="tab" aria-controls="item1" aria-selected="true">
+            採点者振り分け
             <i class="far fa-question-circle" data-toggle="tooltip" data-placement="top" style="font-size:24px" data-html="true" data-delay="500" title="<h5>イメージ処理済みの試験の設問を問題種別単位に各グループへ振分けを行います。</h5>"></i>
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link border" id="item2-tab" data-toggle="tab" href="#item2" role="tab" aria-controls="item2" aria-selected="false">
-            振り分け修正
-            <i class="far fa-question-circle" data-toggle="tooltip" data-placement="top" style="font-size:24px" data-html="true" data-delay="500" title="<h5>イメージ処理済みの試験の設問を問題種別単位に各採点者へ振分けを行います。</h5>"></i>
-        </a>
-    </li>
-    <li class="nav-item">
         <a class="nav-link border" id="item3-tab" data-toggle="tab" href="#item3" role="tab" aria-controls="item3" aria-selected="false">
-            振り分け数管理
+            振り分け状況確認
             <i class="far fa-question-circle" data-toggle="tooltip" data-placement="top" style="font-size:24px" data-html="true" data-delay="500" title="<h5>各グループに振分けたバッチ数等を確認します。</h5>"></i>
         </a>
     </li>
 </ul>
 
 <div class="tab-content">
-    <div class="tab-pane fade show active" id="item1" role="tabpanel" aria-labelledby="item1-tab">
-        <div class="mt-4 row">
-            <div class="col-md-3">
-                <div style="margin-bottom:5px;">
-                    <div class="btnLeft">
-                        <h4>■振分対象</h4>
-                    </div>
-                    <div class="btnRight">
-                        <button class="btn btn-sm btn-primary">
-                            自動振り分け
-                            <i class="far fa-question-circle" data-toggle="tooltip" data-placement="top" style="font-size:18px" data-html="true" data-delay="500" title="<h5>各グループに振分けたバッチ数等を確認します。</h5>"></i>
-                        </button>
+    <div class="tab-pane fade show active" id="Huriwake" role="tabpanel" aria-labelledby="item1-tab">
+        <div class="container-fluid border mt-4" style="background-color:ghostwhite">
+            <h5>■試験選択</h5>
+            <div class="mt-2 mb-3">
+                <div class="btnLeft">
+                    <div class="form-inline">
+                        <label class="col-auto" for="inExamId">試験ID：</label>
+                        <select id="inExamId1" class="col-auto form-control custom-select" @@change="onChangeExam" style="min-width:200px;">
+                            <option value='' selected></option>
+                            <option value='2020年度入学試験'>20-1009-1</option>
+                            <option value='2021年度入学試験'>21-1009-2</option>
+                            <option value='2022年度入学試験'>22-1009-3</option>
+                            <option value='2023年度入学試験'>23-1009-4</option>
+                            <option value='2024年度入学試験'>24-1009-5</option>
+                        </select>
+                        <select id="inExamId2" class="col-auto form-control custom-select" @@change="onChangeExam" style="min-width:400px;">
+                            <option value='' selected></option>
+                            <option value='2020年度入学試験'>2020年度入学試験</option>
+                            <option value='2021年度入学試験'>2021年度入学試験</option>
+                            <option value='2022年度入学試験'>2022年度入学試験</option>
+                            <option value='2023年度入学試験'>2023年度入学試験</option>
+                            <option value='2024年度入学試験'>2024年度入学試験</option>
+                        </select>
+                        <span class="ml-4" v-bind:class="{ invisible: !isActiveHuriwakeTables }">
+                            <b>
+                                受験者数：1200人　設問数：172　総バッチ数：215　未振分バッチ数：215
+                            </b>
+                        </span>
                     </div>
                 </div>
-                <table class="table table-bordered table-striped border">
-                    <thead>
-                        <tr class="text-center" style="background-color:ghostwhite">
-                            <th class="">問題種別</th>
-                            <th class="">バッチ数</th>
-                            <th class="">設問数</th>
-                            <th class="">振分数</th>
-                            <th class="">振分残数</th>
-                        </tr>
-                    </thead>
-                    <tbody class="text-center" style="cursor:pointer">
-                        @foreach (var item in mondaishubetu)
-                        {
-                            <tr id="@(item.Id)" onclick="FormDetail('@(item.Id)');">
-                                <td>@(item.Shubetu)</td>
-                                <td>@(item.BatchSuu)</td>
-                                <td>@(item.SetsumonSuu)</td>
-                                <td>@(item.HuriwakeSuu)</td>
-                                <td>@(item.ZanSuu)</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+                <div class="btnRight">
+                    <button class="btn btn btn-primary">
+                        振分登録
+                    </button>
+                </div>
             </div>
-            <div class="col-md-9">
+        </div>
+        <div id="HuriwakeTables" class="mt-4 row" v-bind:class="{ invisible: !isActiveHuriwakeTables }">
+            <div class="col-md-6">
                 <div style="margin-bottom:5px;">
                     <div class="btnLeft">
-                        <button class="btn btn-sm btn-primary">
+                        <button class="btn btn-sm btn-primary" v-on:click='hasCheckAll(true,true)'>
                             全選択
                         </button>
-                        <button class="btn btn-sm btn-primary">
+                        <button class="btn btn-sm btn-primary" v-on:click='hasCheckAll(true,false)'>
                             全解除
-                        </button>
-                        <button class="btn btn-sm btn-primary">
-                            チェック反転
-                        </button>
-                        <button class="btn btn-sm btn-primary">
-                            クリア
                         </button>
                     </div>
                     <div class="btnRight">
-                        <button class="btn btn-sm btn-primary">
-                            均等率設定
-                            <i class="far fa-question-circle" data-toggle="tooltip" data-placement="top" style="font-size:18px" data-html="true" data-delay="500" title="<h5>各グループに振分けたバッチ数等を確認します。</h5>"></i>
-                        </button>
-                        <button class="btn btn-sm btn-primary">
+                        <button class="btn btn-sm btn-primary" v-on:click="clickAutoSetting">
                             自動設定
                             <i class="far fa-question-circle" data-toggle="tooltip" data-placement="top" style="font-size:18px" data-html="true" data-delay="500" title="<h5>各グループに振分けたバッチ数等を確認します。</h5>"></i>
                         </button>
-                        <button class="btn btn-sm btn-primary">
-                            確定
-                            <i class="far fa-question-circle" data-toggle="tooltip" data-placement="top" style="font-size:18px" data-html="true" data-delay="500" title="<h5>各グループに振分けたバッチ数等を確認します。</h5>"></i>
-                        </button>
                     </div>
                 </div>
-                <table class="table table-bordered table-sm table-striped border">
+                <table id="groupTable" class="table table-bordered table-hover table-sm border scrollTable">
                     <thead>
                         <tr class="text-center" style="background-color:ghostwhite">
-                            <th class="align-middle" rowspan="2" width="5%">選択</th>
-                            <th class="align-middle" rowspan="2">グループ名</th>
-                            <th class="align-middle" rowspan="2">採点者名</th>
-                            <th class="align-middle" rowspan="1" colspan="5">振分済み</th>
-                            <th class="align-middle" rowspan="2">振分済み<br>合計</th>
-                            <th class="align-middle" rowspan="1">振分率</th>
-                            <th class="align-middle" rowspan="1">振分数</th>
+                            <th class="align-middle" rowspan="1" width="5%">選択</th>
+                            <th class="align-middle" rowspan="1">グループ名</th>
+                            <th class="align-middle" rowspan="1" style="width: 100px;">
+                                受験者<br>
+                                <button class="btn btn-sm btn-outline-primary pt-0 pb-0" v-on:click='kintouHuriwake("JukenshaSuu",true)'>
+                                    均等
+                                </button>
+                            </th>
+                            <th class="align-middle" rowspan="1" style="width: 100px;">
+                                選択肢<br>
+                                <button class="btn btn-sm btn-outline-primary pt-0 pb-0" v-on:click='kintouHuriwake("SentakusiSuu",true)'>
+                                    均等
+                                </button>
+                            </th>
+                            <th class="align-middle" rowspan="1" style="width: 100px;">
+                                単E<br>
+                                <button class="btn btn-sm btn-outline-primary pt-0 pb-0" v-on:click='kintouHuriwake("TanESuu",true)'>
+                                    均等
+                                </button>
+                            </th>
+                            <th class="align-middle" rowspan="1" style="width: 100px;">
+                                単M<br>
+                                <button class="btn btn-sm btn-outline-primary pt-0 pb-0" v-on:click='kintouHuriwake("TanMSuu",true)'>
+                                    均等
+                                </button>
+                            </th>
+                            <th class="align-middle" rowspan="1" style="width: 100px;">
+                                単H<br>
+                                <button class="btn btn-sm btn-outline-primary pt-0 pb-0" v-on:click='kintouHuriwake("TanHSuu",true)'>
+                                    均等
+                                </button>
+                            </th>
+                            <th class="align-middle" rowspan="1" style="width: 100px;">合計</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-center" style="cursor:pointer">
+                        <tr v-for="group in groups" class="text-center" v-on:dblclick="onRowDblClick(group)">
+                            <td class="center align-middle">
+                                <input type="checkbox" class="group_select_checkbox" v-model="group.IsSelected">
+                            </td>
+                            <td class="align-middle">{{group.GroupName}}</td>
+                            <td class="align-middle"><input type="number" class="form-control text-center border-0" v-bind:data-id="group.Id" v-model="group.JukenshaSuu" style="background-color: transparent;" /></td>
+                            <td class="align-middle"><input type="number" class="form-control text-center border-0" v-bind:data-id="group.Id" v-model="group.SentakusiSuu" style="background-color:transparent;" /></td>
+                            <td class="align-middle"><input type="number" class="form-control text-center border-0" v-bind:data-id="group.Id" v-model="group.TanESuu" style="background-color:transparent;" /></td>
+                            <td class="align-middle"><input type="number" class="form-control text-center border-0" v-bind:data-id="group.Id" v-model="group.TanMSuu" style="background-color:transparent;" /></td>
+                            <td class="align-middle"><input type="number" class="form-control text-center border-0" v-bind:data-id="group.Id" v-model="group.TanHSuu" style="background-color:transparent;" /></td>
+                            <td class="align-middle">{{ Number(group.JukenshaSuu) + Number(group.SentakusiSuu) + Number(group.TanESuu) + Number(group.TanMSuu) + Number(group.TanHSuu) }}</td>
+                        </tr>
+                    </tbody>
+                    <tfoot class="text-center" style="background-color:ghostwhite;font-weight:600;">
+                        <tr>
+                            <th></th>
+                            <th>振分数</th>
+                            <th>{{getHuriwakeSuu('JukenshaSuu',true)}}</th>
+                            <th>{{getHuriwakeSuu('SentakusiSuu',true)}}</th>
+                            <th>{{getHuriwakeSuu('TanESuu',true)}}</th>
+                            <th>{{getHuriwakeSuu('TanMSuu',true)}}</th>
+                            <th>{{getHuriwakeSuu('TanHSuu',true)}}</th>
+                            <th>{{getHuriwakeSuu('TotalSuu',true)}}</th>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <th>未振分数</th>
+                            <th>{{getMihuriwakeSuu('JukenshaSuu',true)}}</th>
+                            <th>{{getMihuriwakeSuu('SentakusiSuu',true)}}</th>
+                            <th>{{getMihuriwakeSuu('TanESuu',true)}}</th>
+                            <th>{{getMihuriwakeSuu('TanMSuu',true)}}</th>
+                            <th>{{getMihuriwakeSuu('TanHSuu',true)}}</th>
+                            <th>{{getMihuriwakeSuu('TotalSuu',true)}}</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="col-md-6">
+                <div style="display:block;margin-bottom:5px;">
+                    <div class="btnLeft">
+                        <button class="btn btn-sm btn-primary" v-on:click='hasCheckAll(false,true)'>
+                            全選択
+                        </button>
+                        <button class="btn btn-sm btn-primary" v-on:click='hasCheckAll(false,false)'>
+                            全解除
+                        </button>
+                        <span class="ml-2 mt-2 font-weight-bold">選択グループ：{{ selectedGroupName }}</span>
+                    </div>
+                </div>
+                <table id="userTable" class="table table-bordered table-hover table-sm scrollTable">
+                    <thead>
+                        <tr class="text-center" style="background-color:ghostwhite">
+                            <th class="align-middle" width="5%">
+                                選択
+                            </th>
+                            <th class="align-middle">採点者名</th>
+                            <th class="align-middle" style="width: 100px;">
+                                受験者<br>
+                                <button class="btn btn-sm btn-outline-primary pt-0 pb-0" v-on:click='kintouHuriwake("JukenshaSuu",false)'>
+                                    均等
+                                </button>
+                            </th>
+                            <th class="align-middle" rowspan="1" style="width: 100px;">
+                                選択肢<br>
+                                <button class="btn btn-sm btn-outline-primary pt-0 pb-0" v-on:click='kintouHuriwake("SentakusiSuu",false)'>
+                                    均等
+                                </button>
+                            </th>
+                            <th class="align-middle" rowspan="1" style="width: 100px;">
+                                単E<br>
+                                <button class="btn btn-sm btn-outline-primary pt-0 pb-0" v-on:click='kintouHuriwake("TanESuu",false)'>
+                                    均等
+                                </button>
+                            </th>
+                            <th class="align-middle" rowspan="1" style="width: 100px;">
+                                単M<br>
+                                <button class="btn btn-sm btn-outline-primary pt-0 pb-0" v-on:click='kintouHuriwake("TanMSuu",false)'>
+                                    均等
+                                </button>
+                            </th>
+                            <th class="align-middle" rowspan="1" style="width: 100px;">
+                                単H<br>
+                                <button class="btn btn-sm btn-outline-primary pt-0 pb-0" v-on:click='kintouHuriwake("TanHSuu",false)'>
+                                    均等
+                                </button>
+                            </th>
+                            <th class="align-middle" rowspan="1" style="width: 100px;">合計</th>
                         </tr>
                         <tr class="text-center" style="background-color:ghostwhite">
-                            <th class="align-middle" rowspan="1">受験者</th>
-                            <th class="align-middle" rowspan="1">選択肢</th>
-                            <th class="align-middle" rowspan="1">単E</th>
-                            <th class="align-middle" rowspan="1">単M</th>
-                            <th class="align-middle" rowspan="1">単H</th>
-                            <th width="10%">
-                                <input type="number" class="form-control" placeholder="%" style="text-align: right;" />
-                            </th>
-                            <th width="10%">
-                                <input type="number" class="form-control" />
-                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-center" style="cursor:pointer">
+                        <tr v-for="user in filteredUsers" class="text-center">
+                            <td class="center align-middle">
+                                <input type="checkbox" class="user_select_checkbox" v-model="user.IsSelected">
+                            </td>
+                            <td class="align-middle">{{user.UserName}}</td>
+                            <td class="align-middle"><input type="number" class="form-control text-center border-0" v-bind:data-id="user.Id" v-model="user.JukenshaSuu" style="background-color: transparent;" /></td>
+                            <td class="align-middle"><input type="number" class="form-control text-center border-0" v-bind:data-id="user.Id" v-model="user.SentakusiSuu" style="background-color:transparent;" /></td>
+                            <td class="align-middle"><input type="number" class="form-control text-center border-0" v-bind:data-id="user.Id" v-model="user.TanESuu" style="background-color:transparent;" /></td>
+                            <td class="align-middle"><input type="number" class="form-control text-center border-0" v-bind:data-id="user.Id" v-model="user.TanMSuu" style="background-color:transparent;" /></td>
+                            <td class="align-middle"><input type="number" class="form-control text-center border-0" v-bind:data-id="user.Id" v-model="user.TanHSuu" style="background-color:transparent;" /></td>
+                            <td class="align-middle">{{ Number(user.JukenshaSuu) + Number(user.SentakusiSuu) + Number(user.TanESuu) + Number(user.TanMSuu) + Number(user.TanHSuu) }}</td>
+                        </tr>
+                    </tbody>
+                    <tfoot class="text-center" style="background-color:ghostwhite;font-weight:600;">
+                        <tr>
+                            <th></th>
+                            <th>振分数</th>
+                            <th>{{getHuriwakeSuu('JukenshaSuu',false)}}</th>
+                            <th>{{getHuriwakeSuu('SentakusiSuu',false)}}</th>
+                            <th>{{getHuriwakeSuu('TanESuu',false)}}</th>
+                            <th>{{getHuriwakeSuu('TanMSuu',false)}}</th>
+                            <th>{{getHuriwakeSuu('TanHSuu',false)}}</th>
+                            <th>{{getHuriwakeSuu('TotalSuu',false)}}</th>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <th>未振分数</th>
+                            <th>{{getMihuriwakeSuu('JukenshaSuu',false)}}</th>
+                            <th>{{getMihuriwakeSuu('SentakusiSuu',false)}}</th>
+                            <th>{{getMihuriwakeSuu('TanESuu',false)}}</th>
+                            <th>{{getMihuriwakeSuu('TanMSuu',false)}}</th>
+                            <th>{{getMihuriwakeSuu('TanHSuu',false)}}</th>
+                            <th>{{getMihuriwakeSuu('TotalSuu',false)}}</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane fade" id="item3" role="tabpanel" aria-labelledby="item3-tab">
+        <div class="container-fluid border mt-4" style="background-color:ghostwhite">
+            <h5>■表示条件変更</h5>
+            <form class="mt-2">
+                <div class="row text-nowrap">
+                    <div class="col-3">
+                        <label for="searchCondition_examName">
+                            【試験名】
+                        </label>
+                        <input id="searchCondition_examName" type="text" class="col-12 bg-white form-control" />
+                    </div>
+                    <div class="col-2">
+                        <label for="searchCondition_groupName" class="">
+                            【グループ名】
+                        </label>
+                        <input id="searchCondition_groupName" type="text" class="bg-white form-control" placeholder="" />
+                    </div>
+                    <div class="col-2">
+                        <label for="searchCondition_UserName">
+                            【採点者名】
+                        </label>
+                        <input id="searchCondition_UserName" type="text" class="bg-white form-control" placeholder="" />
+                    </div>
+                    <div class="col-2 text-center mt-3 mb-4">
+                        <button type="submit" class="btn-lg form-control btn-outline-primary">表示切替</button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+        <div class="row mt-4">
+            <div class="col-6">
+                <h5>【グループ別振り分け数】</h5>
+                <table class="table table-bordered table-hover table-striped">
+                    <thead>
+                        <tr class="text-center" style="background-color:ghostwhite">
+                            <th class="align-middle">グループ名</th>
+                            <th class="align-middle">受験者</th>
+                            <th class="align-middle">選択肢</th>
+                            <th class="align-middle">単E</th>
+                            <th class="align-middle">単M</th>
+                            <th class="align-middle">単H</th>
+                            <th class="align-middle">合計</th>
                         </tr>
                     </thead>
                     <tbody class="text-center " style="cursor:pointer">
@@ -179,236 +380,14 @@
                                 var tanM = rnd.Next(0, 10);
                                 var tanH = rnd.Next(0, 10);
                                 <tr>
-                                    <td class="center align-middle">
-                                        <span>
-                                            <input type="checkbox" class="checkbox" />
-                                        </span>
-                                    </td>
                                     <td class="align-middle">グループ@(i.ToString())</td>
-                                    <td class="align-middle">ユーザー0@(i.ToString())</td>
                                     <td class="align-middle">@jukensha</td>
                                     <td class="align-middle">@sentakusi</td>
                                     <td class="align-middle">@tanE</td>
                                     <td class="align-middle">@tanM</td>
                                     <td class="align-middle">@tanH</td>
                                     <td class="align-middle">@(jukensha + sentakusi + tanE + tanM + tanH)</td>
-                                    <td>
-                                        <input type="number" class="form-control" placeholder="%" style="text-align: right;" />
-                                    </td>
-                                    <td>
-                                        <input type="number" class="form-control" />
-                                    </td>
-                                </tr>
-                            }
-                        }
-                    </tbody>
-                </table>
-                <div class="btnRight">
-                    <button class="btn btn-lg btn-primary" disabled>
-                        振分登録
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="tab-pane fade" id="item2" role="tabpanel" aria-labelledby="item2-tab">
-        <h4 class="mt-4">■振り分け修正</h4>
-        <div class="form-group mt-2 ml-2">
-            <div id="file" class="input-group">
-                <div class="custom-file">
-                    <input type="file" id="cutomfile" class="custom-file-input" name="cutomfile[]" multiple />
-                    <label class="custom-file-label" for="customfile" data-browse="参照">ファイル選択...</label>
-                </div>
-                <div class="input-group-append">
-                    <button type="button" class="btn btn-outline-secondary reset">取消</button>
-                </div>
-            </div>
-        </div>
-        <hr />
-        <div class="row">
-            <div class="col-6 border-right">
-                <h5>【項目リスト】</h5>
-                <table class="table table-bordered table-sm border">
-                    <thead>
-                        <tr class="text-center" style="background-color:ghostwhite">
-                            <th data-id="repoNo" class="">No</th>
-                            <th class="">項目名</th>
-                            <th class="">画像識別ID</th>
-                        </tr>
-                    </thead>
-                    <tbody class="text-center" style="cursor:pointer">
-                        <tr onclick="">
-                            <td>1</td>
-                            <td>帳票判定</td>
-                            <td>T-01</td>
-                        </tr>
-                        <tr onclick="">
-                            <td>2</td>
-                            <td>受験番号</td>
-                            <td>T-02</td>
-                        </tr>
-                        <tr onclick="">
-                            <td>3</td>
-                            <td>性別</td>
-                            <td>T-03</td>
-                        </tr>
-                        <tr onclick="">
-                            <td>4</td>
-                            <td>受験者氏名</td>
-                            <td>T-04</td>
-                        </tr>
-                        <tr onclick="">
-                            <td>5</td>
-                            <td>1①</td>
-                            <td>1-1</td>
-                        </tr>
-                        <tr onclick="">
-                            <td>6</td>
-                            <td>1②</td>
-                            <td>1-2</td>
-                        </tr>
-                        <tr onclick="">
-                            <td>7</td>
-                            <td>2①ア</td>
-                            <td>2-1-1</td>
-                        </tr>
-                        <tr onclick="">
-                            <td>8</td>
-                            <td>2①イ</td>
-                            <td>2-1-2</td>
-                        </tr>
-                        <tr onclick="">
-                            <td>9</td>
-                            <td>2②</td>
-                            <td>2-2</td>
-                        </tr>
 
-                    </tbody>
-                </table>
-            </div>
-            <div class="container-fluid text-nowrap col-6">
-                <form>
-                    <div class="form-group">
-                        <p class="form-inline">
-                            <label class="col-auto" for="inExamId">項目種別：</label>
-                            <select id="inExamId" class="col-auto form-control custom-select">
-                                <option value='' selected></option>
-                                <option value='帳票識別'>帳票識別</option>
-                                <option value='データ項目'>データ項目</option>
-                                <option value='設問'>設問</option>
-                                <option value='選択項目'>マーク項目</option>
-                                <option value='アンケート'>アンケート</option>
-                            </select>
-                        </p>
-                        <p class="form-inline">
-                            <label class="col-auto" for="">問題種別：</label>
-                            <select id="inExamId" class="col-auto form-control custom-select">
-                                <option value='' selected></option>
-                                <option value='帳票識別'>単E</option>
-                                <option value='データ項目'>単M</option>
-                                <option value='設問'>単H</option>
-                            </select>
-                            <select id="inExamId" class="col-auto form-control custom-select">
-                                <option value='' selected></option>
-                                <option value='帳票識別'>正誤・横</option>
-                                <option value='データ項目'>正誤・縦</option>
-                                <option value='設問'>配点入力・横</option>
-                                <option value='設問'>配点入力・縦</option>
-                            </select>
-                        </p>
-                        <p class="form-check form-check-inline">
-                            <label class="col-auto form-check-label" for="">複数採点：</label>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="radio1" id="radio1a" checked>
-                                <label class="form-check-label" for="radio1a">有り</label>
-                                <select id="" class="form-control custom-select">
-                                    <option value='' selected>2</option>
-                                    <option value='帳票識別'>3</option>
-                                    <option value='データ項目'>4</option>
-                                    <option value='設問'>5</option>
-                                </select>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="radio1" id="radio1b">
-                                <label class="form-check-label" for="radio1b">無し</label>
-                            </div>
-                        </p>
-                        <p class="form-inline">
-                            <label class="col-auto" for="bachiCount">
-                                振分けバッチ数：
-                            </label>
-                            <input id="bachiCount" type="text" class="bg-white form-control" />
-                        </p>
-                        <p class="form-inline">
-                            <label class="col-auto" for="bachiCount">
-                                自動振り分けグループ：
-                            </label>
-                            <select id="" class="form-control custom-select">
-                                <option value='' selected></option>
-                                <option value=''>グループ1</option>
-                                <option value=''>グループ2</option>
-                                <option value=''>グループ3</option>
-                            </select>
-                        </p>
-                        <div class="container col-4 mt-5">
-                            <p>
-                                <a id="detailButton" type="button" class="btn form-control btn-outline-success text-center mb-5" asp-area="" asp-controller="FormDefinition" asp-action="Detail" style="display:none">詳　細</a>
-                            </p>
-                            <p>
-                                <button id="scoringOrder" type="button" class="form-control btn-outline-primary" onclick="Regist();">追　加</button>
-                            </p>
-                            <p>
-                                <button id="scoringOrder" type="button" class="form-control btn-outline-primary" onclick="">登　録</button>
-                            </p>
-                            <p>
-                                <button id="scoringOrder" type="button" class="form-control btn-outline-danger" onclick="">削　除</button>
-                            </p>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <div class="tab-pane fade" id="item3" role="tabpanel" aria-labelledby="item3-tab">
-        <h4 class="mt-4">■振り分け数管理</h4>
-        <div class="row">
-            <div class="col-6">
-                <h5>【グループ別振り分け数】</h5>
-                <table class="table table-bordered table-sm table-striped border">
-                    <thead>
-                        <tr class="text-center" style="background-color:ghostwhite">
-                            <th class="align-middle" rowspan="2">グループ名</th>
-                            <th class="align-middle" rowspan="1" colspan="5">振分済み</th>
-                            <th class="align-middle" rowspan="2">振分済み<br>合計</th>
-                        </tr>
-                        <tr class="text-center" style="background-color:ghostwhite">
-                            <th class="align-middle" rowspan="1">受験者</th>
-                            <th class="align-middle" rowspan="1">選択肢</th>
-                            <th class="align-middle" rowspan="1">単E</th>
-                            <th class="align-middle" rowspan="1">単M</th>
-                            <th class="align-middle" rowspan="1">単H</th>
-                            
-                        </tr>
-                    </thead>
-                    <tbody class="text-center " style="cursor:pointer">
-                        @{
-                            var rnd1 = new Random();
-                            for (int i = 1; i <= 10; i++)
-                            {
-                                var jukensha = rnd.Next(0, 10);
-                                var sentakusi = rnd.Next(0, 10);
-                                var tanE = rnd.Next(0, 10);
-                                var tanM = rnd.Next(0, 10);
-                                var tanH = rnd.Next(0, 10);
-                                <tr>
-                                    <td class="align-middle">グループ@(i.ToString())</td>
-                                    <td class="align-middle">@jukensha</td>
-                                    <td class="align-middle">@sentakusi</td>
-                                    <td class="align-middle">@tanE</td>
-                                    <td class="align-middle">@tanM</td>
-                                    <td class="align-middle">@tanH</td>
-                                    <td class="align-middle">@(jukensha + sentakusi + tanE + tanM + tanH)</td>
-                                   
                                 </tr>
                             }
                         }
@@ -417,20 +396,21 @@
             </div>
             <div class="col-6">
                 <h5>【採点者別振り分け数】</h5>
-                <table class="table table-bordered table-sm table-striped border">
+                <table class="table table-bordered table-hover table-striped border">
                     <thead>
                         <tr class="text-center" style="background-color:ghostwhite">
-                            <th class="align-middle" rowspan="2">採点者名</th>
-                            <th class="align-middle" rowspan="1" colspan="5">振分済み</th>
-                            <th class="align-middle" rowspan="2">振分済み<br>合計</th>
+                            <th class="align-middle">グループ名</th>
+                            <th class="align-middle">採点者名</th>
+                            <th class="align-middle">受験者</th>
+                            <th class="align-middle">選択肢</th>
+                            <th class="align-middle">単E</th>
+                            <th class="align-middle">単M</th>
+                            <th class="align-middle">単H</th>
+                            <th class="align-middle">合計</th>
                         </tr>
                         <tr class="text-center" style="background-color:ghostwhite">
-                            <th class="align-middle" rowspan="1">受験者</th>
-                            <th class="align-middle" rowspan="1">選択肢</th>
-                            <th class="align-middle" rowspan="1">単E</th>
-                            <th class="align-middle" rowspan="1">単M</th>
-                            <th class="align-middle" rowspan="1">単H</th>
-                           
+
+
                     </thead>
                     <tbody class="text-center " style="cursor:pointer">
                         @{
@@ -443,6 +423,7 @@
                                 var tanM = rnd.Next(0, 10);
                                 var tanH = rnd.Next(0, 10);
                                 <tr>
+                                    <td class="align-middle">グループ@(i.ToString())</td>
                                     <td class="align-middle">ユーザー0@(i.ToString())</td>
                                     <td class="align-middle">@jukensha</td>
                                     <td class="align-middle">@sentakusi</td>
@@ -450,7 +431,7 @@
                                     <td class="align-middle">@tanM</td>
                                     <td class="align-middle">@tanH</td>
                                     <td class="align-middle">@(jukensha + sentakusi + tanE + tanM + tanH)</td>
-                                    
+
                                 </tr>
                             }
                         }
@@ -462,12 +443,167 @@
 </div>
 
 @section Scripts{
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
     <script>
         $(function () {
             $('[data-toggle="tooltip"]').tooltip();
 
+            var groups = [
+                { GroupName: "グループ1", JukenshaSuu: 0, SentakusiSuu: 0, TanESuu: 0, TanMSuu: 0, TanHSuu: 0, ID: 1, IsSelected: true },
+                { GroupName: "グループ2", JukenshaSuu: 0, SentakusiSuu: 0, TanESuu: 0, TanMSuu: 0, TanHSuu: 0, ID: 2, IsSelected: false },
+                { GroupName: "グループ3", JukenshaSuu: 0, SentakusiSuu: 0, TanESuu: 0, TanMSuu: 0, TanHSuu: 0, ID: 3, IsSelected: false },
+                { GroupName: "グループ4", JukenshaSuu: 0, SentakusiSuu: 0, TanESuu: 0, TanMSuu: 0, TanHSuu: 0, ID: 4, IsSelected: false },
+                { GroupName: "グループ5", JukenshaSuu: 0, SentakusiSuu: 0, TanESuu: 0, TanMSuu: 0, TanHSuu: 0, ID: 5, IsSelected: false },
+                { GroupName: "グループ6", JukenshaSuu: 0, SentakusiSuu: 0, TanESuu: 0, TanMSuu: 0, TanHSuu: 0, ID: 6, IsSelected: false }
+            ];
 
-        })
+            var users = [];
+            var count = 1;
+            groups.forEach(group => {
+                for (var i = 1; i < 7; i++) {
+                    users.push({
+                        GroupName: group.GroupName,
+                        UserName: "採点者" + count.toString(),
+                        JukenshaSuu: group.JukenshaSuu,
+                        SentakusiSuu: group.SentakusiSuu,
+                        TanESuu: group.TanESuu,
+                        TanMSuu: group.TanMSuu,
+                        TanHSuu: group.TanHSuu,
+                        ID: count.toString(),
+                        IsSelected: false
+                    });
+                    count++;
+                }
+            });
+
+            var vm = new Vue({
+                el: "#Huriwake",
+                data: {
+                    groups: groups,
+                    users: users,
+                    initialGroupHuriwakeZan: {
+                        JukenshaSuu: 60,
+                        SentakusiSuu: 50,
+                        TanESuu: 40,
+                        TanMSuu: 45,
+                        TanHSuu: 20,
+                        TotalSuu: 215
+                    },
+                    isActiveHuriwakeTables: false,
+                },
+                computed: {
+                    filteredUsers: function () {
+                        return this.users.filter(function (user) {
+                            return groups.some(group => group.IsSelected && group.GroupName == user.GroupName);
+                        });
+                    },
+                    selectedGroupName: function () {
+                        let str = '';
+                        this.groups.forEach(group => {
+                            if (group.IsSelected) {
+                                str += group.GroupName + ', ';
+                            }
+                        });
+
+                        return str.endsWith(', ') ? str.replace(/(.*), /, "$1") : str;
+                    }
+                },
+                methods: {
+                    onRowDblClick(target) {
+                        target.IsSelected = !target.IsSelected;
+                    },
+                    onChangeExam(event) {
+                        console.log(event.target.value);
+                        this.isActiveHuriwakeTables = true;
+                    },
+                    clickAutoSetting() {
+                        this.groups[0].JukenshaSuu = this.initialGroupHuriwakeZan.JukenshaSuu;
+                        this.groups[1].SentakusiSuu = this.initialGroupHuriwakeZan.SentakusiSuu;
+                        this.groups[2].TanESuu = this.initialGroupHuriwakeZan.TanESuu;
+                        this.groups[3].TanMSuu = this.initialGroupHuriwakeZan.TanMSuu;
+                        this.groups[4].TanHSuu = this.initialGroupHuriwakeZan.TanHSuu;
+                    },
+                    hasCheckAll: function (isgroup, hasCheck) {
+                        if (isgroup) {
+                            this.groups.forEach(x => {
+                                x.IsSelected = hasCheck;
+                            });
+                        }
+                        else {
+                            this.filteredUsers.forEach(user => {
+                                user.IsSelected = hasCheck;
+                            });
+                        }
+                    },
+
+                    kintouHuriwake(targetColumn, isGroup) {
+                        var zan = this.getMihuriwakeSuu(targetColumn, isGroup);
+
+                        if (zan === 0) {
+                            alert('未振分数が0です。');
+                            return;
+                        }
+
+                        var targetList = isGroup ? this.groups : this.filteredUsers;
+                        var cnt = targetList.filter(function (x) { return x.IsSelected }).length;
+                        var huriateZumiSuu = 0;
+
+                        if (cnt == 0) {
+                            alert('振り分ける対象を選択してください');
+                            return;
+                        }
+
+                        targetList.forEach(x => {
+                            if (x.IsSelected) {
+                                const huriateSuu = zan / cnt | 0;
+                                x[targetColumn] += huriateSuu;
+                                huriateZumiSuu += huriateSuu;
+                            }
+                        });
+
+                        if (zan > huriateZumiSuu) {
+                            targetList.forEach(x => {
+                                if (x.IsSelected && zan > huriateZumiSuu) {
+                                    let huriateSuu = zan - huriateZumiSuu;
+                                    if (huriateSuu <= cnt) {
+                                        huriateSuu = 1;
+                                    }
+                                    x[targetColumn] += huriateSuu;
+                                    huriateZumiSuu += huriateSuu;
+                                    return;
+                                }
+                            });
+                        }
+                    },
+                    getHuriwakeSuu(targetColumn, isGroup) {
+                        var targetList = isGroup ? this.groups : this.filteredUsers;
+                        if (targetColumn == 'TotalSuu') {
+                            return targetList.reduce((acc, cur) => acc + Number(cur.JukenshaSuu) + Number(cur.SentakusiSuu) + Number(cur.TanESuu) + Number(cur.TanMSuu) + Number(cur.TanHSuu), 0);
+                        }
+                        else {
+                            return targetList.reduce((acc, cur) => acc + Number(cur[targetColumn]), 0);
+                        }
+                    },
+                    getMihuriwakeSuu(targetColumn, isGroup) {
+                        if (isGroup) {
+                            return this.initialGroupHuriwakeZan[targetColumn] - this.getHuriwakeSuu(targetColumn, isGroup);
+                        }
+                        else {
+                            const val = this.groups.filter(function (x) { return x.IsSelected })
+                                .reduce((acc, cur) => acc + Number(cur[targetColumn]), 0)
+                                - this.getHuriwakeSuu(targetColumn, isGroup);
+
+                            return val ? val : 0;
+                        }
+                    }
+                }
+            });
+
+        });
+
+        function Huriwake() {
+
+        }
 
         function FormDetail(repoNo) {
             $('tbody > tr').css({ 'background-color': '' });

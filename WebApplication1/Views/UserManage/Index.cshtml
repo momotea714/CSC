@@ -67,7 +67,9 @@
                             <th class="">ユーザーID</th>
                             <th class="">ユーザー名</th>
                             <th class="">権限</th>
-                            <th class="">表示/非表示</th>
+                            <th class="">有効/無効</th>
+                            <th class="">有効期限</th>
+                            <th class="">ロック状態</th>
                             <th class="">作成日時</th>
                         </tr>
                     </thead>
@@ -110,7 +112,27 @@
                                             @applicationUser.UserRoleName
                                         </td>
                                         <td>
-                                            @(applicationUser.IsValid ? "表示" : "非表示")
+                                            @(applicationUser.IsValid ? "有効" : "無効")
+                                        </td>
+                                        <td>
+                                            @DateTime.Now.AddDays(count).ToString("yyyy/MM/dd")
+                                        </td>
+                                        <td>
+                                            @{
+                                                if (applicationUser.GroupName == "グループ3")
+                                                {
+                                                    <label>
+                                                        ロック中
+                                                        <button class="btn btn-sm btn-primary" style="margin-left:10px;">
+                                                            <i class="pointer fas fa-unlock faa-wrench animated-hover"></i>
+                                                        </button>
+                                                    </label>
+                                                }
+                                                else
+                                                {
+                                                    <label></label>
+                                                }
+                                            }
                                         </td>
                                         <td>
                                             @DateTime.Now.AddDays(count).ToString("yyyy/MM/dd hh:MM:ss")
@@ -154,9 +176,15 @@
                     </div>
                     <div class="ml-2">
                         <label for="isValid">
-                            【表示/非表示】
+                            【有効/無効】
                         </label>
                         <select id="isValid" asp-items="isValidList" class="form-control"></select>
+                    </div>
+                    <div class="ml-2">
+                        <label for="isValid">
+                            【有効期限】
+                        </label>
+                        <input id="ExpirationDate" type="date" class="col-12 bg-white form-control" />
                     </div>
                     <div class="container mt-5">
                         <p>
